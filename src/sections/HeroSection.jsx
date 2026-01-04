@@ -195,28 +195,20 @@ export default function HeroSection() {
 
               <div className="pt-4">
 
-                <PrimaryButton
+<PrimaryButton
   href="#registro"
-  onClick={(e) => {
-    e.preventDefault();
-    const targetId = "registro";
-    const element = document.getElementById(targetId);
-
-    if (element) {
-      // 1. Forzamos un pequeño retraso para que el navegador móvil 
-      // procese el "toque" antes de intentar mover la pantalla.
-      setTimeout(() => {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-        
-        // 2. Opcional: Actualiza la URL sin recargar para que el "atrás" funcione
-        window.history.pushState(null, null, `#${targetId}`);
-      }, 100); 
+  // Usamos onTouchStart para móviles y onClick para laptop
+  onTouchStart={(e) => {
+    const target = document.getElementById("registro");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
     }
   }}
-  className="bg-cyan-600 hover:bg-cyan-500 text-white font-black py-5 px-14 lg:py-6 lg:px-20 rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 tracking-[0.2em] text-[12px] lg:text-sm border-b-4 border-cyan-800 touch-manipulation"
+  onClick={(e) => {
+    e.preventDefault();
+    document.getElementById("registro")?.scrollIntoView({ behavior: "smooth" });
+  }}
+  className="relative z-50 bg-cyan-600 hover:bg-cyan-500 text-white font-black py-5 px-14 lg:py-6 lg:px-20 rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 tracking-[0.2em] text-[12px] lg:text-sm border-b-4 border-cyan-800 touch-manipulation"
 >
   CONFIRMAR ASISTENCIA
 </PrimaryButton>
