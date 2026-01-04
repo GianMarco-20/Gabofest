@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* ✅ Fix barra doble / overflow raro */
+@layer base {
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden; /* corta SOLO horizontal */
+    overflow-y: auto;   /* scroll normal de página */
+  }
+
+  #root {
+    min-height: 100%;
+    overflow: visible;  /* clave: evita scroll interno extra */
+  }
+}
