@@ -8,33 +8,38 @@ import ringPink from "../assets/hero/ring-pink.png";
 export default function HeroSection() {
   const wrapRef = useRef(null);
 
-  // ✅ FUNCIÓN DE SCROLL ROBUSTA
-  const handleScroll = (e) => {
-  // Prevenir que el navegador intente recargar o saltar
-  if (e && e.cancelable) e.preventDefault();
+  // ✅ SCROLL 100% "gesture-safe" (sin setTimeout / sin preventDefault)
+  const handleScroll = () => {
+    const target = document.getElementById("registro");
+    if (!target) return;
 
-  const target = document.getElementById("registro");
-  
-  if (target) {
-    // Opción A: Scroll suave nativo
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Calcula posición real en el documento (más fiable que offsetTop)
+    const top = target.getBoundingClientRect().top + window.scrollY;
 
-    // Opción B: Refuerzo para móviles que ignoran el behavior smooth
-    // Usamos un tiempo corto para asegurar que el render ya ocurrió
-    setTimeout(() => {
-      const offset = target.offsetTop;
-      window.scrollTo({
-        top: offset,
-        behavior: "smooth"
-      });
-    }, 100);
-  }
-};
+    // Intento 1: scroll suave
+    try {
+      window.scrollTo({ top, behavior: "smooth" });
+    } catch {
+      // Fallback muy viejo: sin smooth
+      window.scrollTo(0, top);
+    }
+
+    // Refuerzo inmediato SIN timers (móvil a veces ignora el primero)
+    // requestAnimationFrame mantiene el gesto, a diferencia de setTimeout
+    requestAnimationFrame(() => {
+      const top2 = target.getBoundingClientRect().top + window.scrollY;
+      try {
+        window.scrollTo({ top: top2, behavior: "smooth" });
+      } catch {
+        window.scrollTo(0, top2);
+      }
+    });
+  };
 
   // ✅ PARALLAX (SOLO DESKTOP)
   const onMouseMove = (e) => {
-    if (window.matchMedia("(pointer: coarse)").matches) return; 
-    
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
     const el = wrapRef.current;
     if (!el) return;
     const { left, top, width, height } = el.getBoundingClientRect();
@@ -53,7 +58,7 @@ export default function HeroSection() {
   };
 
   const bubbles = useMemo(() => {
-    const n = 40; 
+    const n = 40;
     const rand01 = (i) => {
       const x = Math.sin(i * 437.123) * 10000;
       return x - Math.floor(x);
@@ -94,7 +99,19 @@ export default function HeroSection() {
 
       {/* BURBUJAS */}
       {bubbles.map((b, i) => (
-        <div key={i} className="bubble-hero-back" style={{ left: `${b.left}%`, width: `${b.size}px`, height: `${b.size}px`, animationDuration: `${b.dur}s`, animationDelay: `${b.delay}s`, background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), rgba(180, 240, 255, 0.1))`, "--op": b.op }} />
+        <div
+          key={i}
+          className="bubble-hero-back"
+          style={{
+            left: `${b.left}%`,
+            width: `${b.size}px`,
+            height: `${b.size}px`,
+            animationDuration: `${b.dur}s`,
+            animationDelay: `${b.delay}s`,
+            background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), rgba(180, 240, 255, 0.1))`,
+            "--op": b.op,
+          }}
+        />
       ))}
 
       <div
@@ -103,20 +120,25 @@ export default function HeroSection() {
         onMouseLeave={onMouseLeave}
         className="relative z-10 w-full h-full flex items-center justify-center p-4 lg:p-12"
       >
-        <div 
+        <div
           className="relative z-10 w-full max-w-3xl smooth-move"
           style={{ transform: `translate3d(var(--px, 0px), var(--py, 0px), 0)` }}
         >
           <div className="backdrop-blur-md bg-white/40 p-6 lg:p-12 rounded-[40px] lg:rounded-[60px] shadow-2xl border border-white/60 text-center">
-            
             <div className="logo-float mb-6">
-              <img src={logoScript} alt="Logo" className="mx-auto w-full max-w-[280px] lg:max-w-[420px] drop-shadow-xl" />
+              <img
+                src={logoScript}
+                alt="Logo"
+                className="mx-auto w-full max-w-[280px] lg:max-w-[420px] drop-shadow-xl"
+              />
             </div>
 
             <div className="space-y-6">
               <div className="flex justify-center items-center gap-3 animate-fade-down">
                 <span className="h-[1px] w-6 bg-cyan-800/30"></span>
-                <p className="text-cyan-900 font-bold uppercase tracking-[0.3em] text-[10px]">Sábado 7 de febrero</p>
+                <p className="text-cyan-900 font-bold uppercase tracking-[0.3em] text-[10px]">
+                  Sábado 7 de febrero
+                </p>
                 <span className="h-[1px] w-6 bg-cyan-800/30"></span>
               </div>
 
@@ -131,30 +153,30 @@ export default function HeroSection() {
               </p>
 
               <div className="pt-4">
-              <PrimaryButton
-                // 1. QUITAMOS el href="#registro" (Esto causa el conflicto en móvil)
-                type="button" 
-                
-                // 2. Usamos onClick como evento principal
-                onClick={handleScroll}
-                
-                // 3. IMPORTANTE: En móvil, 'onPointerDown' es mejor que onTouchEnd 
-                // porque se activa ANTES de que el navegador intente hacer scroll manual
-                onPointerDown={(e) => {
-                  // Evitamos que el toque se propague a otros elementos
-                  e.stopPropagation();
-                  handleScroll(e);
-                }}
-                
-                className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer"
-              >
-                CONFIRMAR ASISTENCIA
-              </PrimaryButton>
+                <PrimaryButton
+                  type="button"
+                  // ✅ Desktop
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleScroll();
+                  }}
+                  // ✅ Móvil (más confiable que pointer en iOS)
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                    handleScroll();
+                  }}
+                  className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer"
+                >
+                  CONFIRMAR ASISTENCIA
+                </PrimaryButton>
               </div>
 
               <div className="flex flex-wrap justify-center gap-2 mt-8">
                 {["Chuleteada 🍖", "Música 🎶", "Pool 🌊", "Dj 🔥"].map((item) => (
-                  <span key={item} className="bg-white/60 px-4 py-2 rounded-xl text-[10px] font-bold text-cyan-950 uppercase border border-white/40 shadow-sm">
+                  <span
+                    key={item}
+                    className="bg-white/60 px-4 py-2 rounded-xl text-[10px] font-bold text-cyan-950 uppercase border border-white/40 shadow-sm"
+                  >
                     {item}
                   </span>
                 ))}
@@ -163,9 +185,17 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* RINGS - Agregado pointer-events-none para que no bloqueen el click en móvil */}
-        <img src={ringYellow} className="hidden sm:block absolute z-[2] left-[5%] top-[15%] w-20 opacity-50 pointer-events-none" alt="" />
-        <img src={ringPink} className="hidden sm:block absolute z-[2] right-[5%] bottom-[10%] w-24 opacity-50 pointer-events-none" alt="" />
+        {/* RINGS */}
+        <img
+          src={ringYellow}
+          className="hidden sm:block absolute z-[2] left-[5%] top-[15%] w-20 opacity-50 pointer-events-none"
+          alt=""
+        />
+        <img
+          src={ringPink}
+          className="hidden sm:block absolute z-[2] right-[5%] bottom-[10%] w-24 opacity-50 pointer-events-none"
+          alt=""
+        />
       </div>
     </section>
   );
