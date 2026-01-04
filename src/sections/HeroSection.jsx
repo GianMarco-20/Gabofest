@@ -194,15 +194,19 @@ export default function HeroSection() {
               </div>
 
               <div className="pt-4">
+
                 <PrimaryButton
-                  type="button"
-                  onClick={scrollToRegister}
-                  onTouchEnd={scrollToRegister}
-                  onPointerUp={scrollToRegister}
-                  className="touch-manipulation bg-cyan-600 hover:bg-cyan-500 text-white font-black py-5 px-14 lg:py-6 lg:px-20 rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 tracking-[0.2em] text-[12px] lg:text-sm border-b-4 border-cyan-800"
+                  href="#registro"
+                  onClick={(e) => {
+                    // mantenemos smooth scroll
+                    e.preventDefault();
+                    document.getElementById("registro")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                  className="bg-cyan-600 hover:bg-cyan-500 text-white font-black py-5 px-14 lg:py-6 lg:px-20 rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 tracking-[0.2em] text-[12px] lg:text-sm border-b-4 border-cyan-800"
                 >
                   CONFIRMAR ASISTENCIA
                 </PrimaryButton>
+
               </div>
 
               <div className="flex flex-wrap justify-center gap-3 lg:gap-5 mt-10">
