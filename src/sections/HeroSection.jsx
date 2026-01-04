@@ -9,8 +9,13 @@ import logoScript from "../assets/hero/logo-script.png";
 export default function HeroSection() {
   const wrapRef = useRef(null);
 
+  // ✅ FIX: scroll más compatible en móvil que scrollIntoView(smooth)
   const scrollToRegister = () => {
-    document.getElementById("registro")?.scrollIntoView({ behavior: "smooth" });
+    const target = document.getElementById("registro");
+    if (!target) return;
+
+    const y = target.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: y, behavior: "smooth" });
   };
 
   const onMouseMove = (e) => {
@@ -32,7 +37,7 @@ export default function HeroSection() {
   };
 
   const bubbles = useMemo(() => {
-    const n = 130; 
+    const n = 130;
     const rand01 = (i) => {
       const x = Math.sin(i * 437.123) * 10000;
       return x - Math.floor(x);
@@ -45,7 +50,7 @@ export default function HeroSection() {
       return {
         left: r1 * 100,
         size: 8 + r2 * 30,
-        delay: -(r3 * 25), 
+        delay: -(r3 * 25),
         dur: 10 + r2 * 15,
         op: 0.2 + r1 * 0.4,
       };
@@ -81,12 +86,13 @@ export default function HeroSection() {
           from { opacity: 0; transform: scale(0.5) translateY(20px); }
           to { opacity: 1; transform: scale(1) translateY(0); }
         }
+
         .animate-reveal { animation: revealUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         .animate-fade-down { animation: fadeInDown 1s ease-out 0.4s backwards; }
         .logo-float { animation: floating 5s ease-in-out infinite; will-change: transform; }
         .fundo-pulse { animation: textPulse 4s ease-in-out infinite; display: inline-block; }
         .smooth-move { transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); will-change: transform; }
-        
+
         .bubble-hero-back {
           position: absolute;
           top: -50px;
@@ -111,8 +117,8 @@ export default function HeroSection() {
         className="hero-bg absolute -inset-[1px] z-0 bg-cover bg-center bg-no-repeat"
         style={{ 
           backgroundImage: `url(${frame})`,
-          height: '101%', 
-          width: '100.5%'
+          height: "101%",
+          width: "100.5%",
         }}
       />
 
@@ -138,6 +144,8 @@ export default function HeroSection() {
         ref={wrapRef}
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
+        // ✅ FIX: defaults para mobile (no hay mousemove)
+        style={{ "--px": "0px", "--py": "0px" }}
         className="relative z-10 w-full h-full flex items-center justify-center p-6 lg:p-12"
       >
         <div
@@ -182,6 +190,8 @@ export default function HeroSection() {
               <div className="pt-4">
                 <PrimaryButton
                   onClick={scrollToRegister}
+                  // ✅ FIX: en móvil es más confiable que solo click
+                  onPointerUp={scrollToRegister}
                   className="bg-cyan-600 hover:bg-cyan-500 text-white font-black py-5 px-14 lg:py-6 lg:px-20 rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 tracking-[0.2em] text-[12px] lg:text-sm border-b-4 border-cyan-800"
                 >
                   CONFIRMAR ASISTENCIA
@@ -205,16 +215,17 @@ export default function HeroSection() {
           </div>
         </div>
 
+        {/* ✅ FIX: que NO intercepten el tap en móvil */}
         <img
           src={ringYellow}
           alt=""
-          className="absolute z-[2] left-[8%] top-[15%] w-20 lg:w-32 opacity-60 smooth-move"
+          className="pointer-events-none absolute z-[2] left-[8%] top-[15%] w-20 lg:w-32 opacity-60 smooth-move"
           style={{ transform: `translate3d(calc(var(--px) * 2), calc(var(--py) * 2), 0) rotate(15deg)` }}
         />
         <img
           src={ringPink}
           alt=""
-          className="absolute z-[2] right-[8%] bottom-[10%] w-24 lg:w-40 opacity-60 smooth-move"
+          className="pointer-events-none absolute z-[2] right-[8%] bottom-[10%] w-24 lg:w-40 opacity-60 smooth-move"
           style={{ transform: `translate3d(calc(var(--px) * -2), calc(var(--py) * -2), 0) rotate(-15deg)` }}
         />
       </div>
