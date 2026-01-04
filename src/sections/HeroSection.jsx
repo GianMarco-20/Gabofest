@@ -8,38 +8,33 @@ import ringPink from "../assets/hero/ring-pink.png";
 export default function HeroSection() {
   const wrapRef = useRef(null);
 
-  // ✅ SCROLL 100% "gesture-safe" (sin setTimeout / sin preventDefault)
-  const handleScroll = () => {
+  // ✅ FUNCIÓN DE SCROLL OPTIMIZADA PARA MÓVIL
+  const handleScroll = (e) => {
+    // Solo prevenimos si el evento lo permite, para no bloquear el hilo
+    if (e && e.cancelable) e.preventDefault();
+
     const target = document.getElementById("registro");
-    if (!target) return;
+    
+    if (target) {
+      // Intentamos el scroll suave nativo primero
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    // Calcula posición real en el documento (más fiable que offsetTop)
-    const top = target.getBoundingClientRect().top + window.scrollY;
-
-    // Intento 1: scroll suave
-    try {
-      window.scrollTo({ top, behavior: "smooth" });
-    } catch {
-      // Fallback muy viejo: sin smooth
-      window.scrollTo(0, top);
+      // Forzamos un segundo intento por coordenadas para asegurar en Safari/Android
+      const topPosition = target.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({
+        top: topPosition,
+        behavior: "smooth"
+      });
+    } else {
+      // Si el ID no se encuentra (raro), forzamos vía hash como último recurso
+      window.location.hash = "registro";
     }
-
-    // Refuerzo inmediato SIN timers (móvil a veces ignora el primero)
-    // requestAnimationFrame mantiene el gesto, a diferencia de setTimeout
-    requestAnimationFrame(() => {
-      const top2 = target.getBoundingClientRect().top + window.scrollY;
-      try {
-        window.scrollTo({ top: top2, behavior: "smooth" });
-      } catch {
-        window.scrollTo(0, top2);
-      }
-    });
   };
 
-  // ✅ PARALLAX (SOLO DESKTOP)
+  // ✅ PARALLAX (DESACTIVADO EN MÓVIL PARA EVITAR BLOQUEO DE CLIC)
   const onMouseMove = (e) => {
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-
+    if (window.matchMedia("(pointer: coarse)").matches) return; 
+    
     const el = wrapRef.current;
     if (!el) return;
     const { left, top, width, height } = el.getBoundingClientRect();
@@ -58,7 +53,7 @@ export default function HeroSection() {
   };
 
   const bubbles = useMemo(() => {
-    const n = 40;
+    const n = 40; 
     const rand01 = (i) => {
       const x = Math.sin(i * 437.123) * 10000;
       return x - Math.floor(x);
@@ -99,19 +94,7 @@ export default function HeroSection() {
 
       {/* BURBUJAS */}
       {bubbles.map((b, i) => (
-        <div
-          key={i}
-          className="bubble-hero-back"
-          style={{
-            left: `${b.left}%`,
-            width: `${b.size}px`,
-            height: `${b.size}px`,
-            animationDuration: `${b.dur}s`,
-            animationDelay: `${b.delay}s`,
-            background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), rgba(180, 240, 255, 0.1))`,
-            "--op": b.op,
-          }}
-        />
+        <div key={i} className="bubble-hero-back" style={{ left: `${b.left}%`, width: `${b.size}px`, height: `${b.size}px`, animationDuration: `${b.dur}s`, animationDelay: `${b.delay}s`, background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), rgba(180, 240, 255, 0.1))`, "--op": b.op }} />
       ))}
 
       <div
@@ -120,25 +103,20 @@ export default function HeroSection() {
         onMouseLeave={onMouseLeave}
         className="relative z-10 w-full h-full flex items-center justify-center p-4 lg:p-12"
       >
-        <div
+        <div 
           className="relative z-10 w-full max-w-3xl smooth-move"
           style={{ transform: `translate3d(var(--px, 0px), var(--py, 0px), 0)` }}
         >
           <div className="backdrop-blur-md bg-white/40 p-6 lg:p-12 rounded-[40px] lg:rounded-[60px] shadow-2xl border border-white/60 text-center">
+            
             <div className="logo-float mb-6">
-              <img
-                src={logoScript}
-                alt="Logo"
-                className="mx-auto w-full max-w-[280px] lg:max-w-[420px] drop-shadow-xl"
-              />
+              <img src={logoScript} alt="Logo" className="mx-auto w-full max-w-[280px] lg:max-w-[420px] drop-shadow-xl" />
             </div>
 
             <div className="space-y-6">
               <div className="flex justify-center items-center gap-3 animate-fade-down">
                 <span className="h-[1px] w-6 bg-cyan-800/30"></span>
-                <p className="text-cyan-900 font-bold uppercase tracking-[0.3em] text-[10px]">
-                  Sábado 7 de febrero
-                </p>
+                <p className="text-cyan-900 font-bold uppercase tracking-[0.3em] text-[10px]">Sábado 7 de febrero</p>
                 <span className="h-[1px] w-6 bg-cyan-800/30"></span>
               </div>
 
@@ -154,18 +132,11 @@ export default function HeroSection() {
 
               <div className="pt-4">
                 <PrimaryButton
-                  type="button"
-                  // ✅ Desktop
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleScroll();
-                  }}
-                  // ✅ Móvil (más confiable que pointer en iOS)
-                  onTouchStart={(e) => {
-                    e.stopPropagation();
-                    handleScroll();
-                  }}
+                  // ✅ Cambiado a onClick para mayor compatibilidad
+                  onClick={handleScroll}
                   className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer"
+                  // ✅ Agregamos style para asegurar que el área de toque sea limpia
+                  style={{ touchAction: 'manipulation' }}
                 >
                   CONFIRMAR ASISTENCIA
                 </PrimaryButton>
@@ -173,10 +144,7 @@ export default function HeroSection() {
 
               <div className="flex flex-wrap justify-center gap-2 mt-8">
                 {["Chuleteada 🍖", "Música 🎶", "Pool 🌊", "Dj 🔥"].map((item) => (
-                  <span
-                    key={item}
-                    className="bg-white/60 px-4 py-2 rounded-xl text-[10px] font-bold text-cyan-950 uppercase border border-white/40 shadow-sm"
-                  >
+                  <span key={item} className="bg-white/60 px-4 py-2 rounded-xl text-[10px] font-bold text-cyan-950 uppercase border border-white/40 shadow-sm">
                     {item}
                   </span>
                 ))}
@@ -185,17 +153,9 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* RINGS */}
-        <img
-          src={ringYellow}
-          className="hidden sm:block absolute z-[2] left-[5%] top-[15%] w-20 opacity-50 pointer-events-none"
-          alt=""
-        />
-        <img
-          src={ringPink}
-          className="hidden sm:block absolute z-[2] right-[5%] bottom-[10%] w-24 opacity-50 pointer-events-none"
-          alt=""
-        />
+        {/* RINGS - pointer-events-none para que no interfieran con el toque del botón */}
+        <img src={ringYellow} className="hidden sm:block absolute z-[2] left-[5%] top-[15%] w-20 opacity-50 pointer-events-none" alt="" />
+        <img src={ringPink} className="hidden sm:block absolute z-[2] right-[5%] bottom-[10%] w-24 opacity-50 pointer-events-none" alt="" />
       </div>
     </section>
   );
