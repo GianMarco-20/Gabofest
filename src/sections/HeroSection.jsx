@@ -8,29 +8,32 @@ import ringPink from "../assets/hero/ring-pink.png";
 export default function HeroSection() {
   const wrapRef = useRef(null);
 
-  // ✅ FUNCIÓN DE SCROLL CORREGIDA (Sin riesgo de pantalla en blanco)
+  // ✅ FUNCIÓN DE SCROLL ROBUSTA
   const handleScroll = (e) => {
-    // 1. Evitamos que el href="#registro" interfiera con el JS
-    if (e && typeof e.preventDefault === 'function') {
-      e.preventDefault();
-    }
+    // 1. Intentamos que el navegador no se confunda con el href
+    if (e && e.preventDefault) e.preventDefault();
 
     const target = document.getElementById("registro");
     
     if (target) {
-      // 2. Ejecutamos el scroll suave estándar
+      // 2. Scroll nativo
       target.scrollIntoView({ behavior: "smooth", block: "start" });
 
-      // 3. REFUERZO: Si el móvil ignora el paso anterior, forzamos coordenadas tras 50ms
+      // 3. Refuerzo manual por si el móvil ignora el paso anterior
       setTimeout(() => {
-        const yOffset = -20; // Ajuste por si tienes un header fijo
-        const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: "smooth" });
+        const top = target.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({
+          top: top,
+          behavior: "smooth"
+        });
       }, 50);
+    } else {
+      // Fallback extremo: si el JS falla, el href="#registro" del componente original actuará
+      window.location.hash = "registro";
     }
   };
 
-  // ✅ DESACTIVAR PARALLAX EN MÓVIL (Evita que el procesador se bloquee y no haga scroll)
+  // ✅ PARALLAX (SOLO DESKTOP)
   const onMouseMove = (e) => {
     if (window.matchMedia("(pointer: coarse)").matches) return; 
     
@@ -52,7 +55,7 @@ export default function HeroSection() {
   };
 
   const bubbles = useMemo(() => {
-    const n = 50; 
+    const n = 40; 
     const rand01 = (i) => {
       const x = Math.sin(i * 437.123) * 10000;
       return x - Math.floor(x);
@@ -131,20 +134,30 @@ export default function HeroSection() {
 
               <div className="pt-4">
                 <PrimaryButton
+                  href="#registro"
                   onClick={handleScroll}
-                  // En móviles usamos onPointerDown que es más rápido que el click
-                  onPointerDown={handleScroll}
+                  // En móviles onTouchEnd es el más fiable
+                  onTouchEnd={handleScroll}
                   className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer"
                 >
                   CONFIRMAR ASISTENCIA
                 </PrimaryButton>
               </div>
+
+              <div className="flex flex-wrap justify-center gap-2 mt-8">
+                {["Chuleteada 🍖", "Música 🎶", "Pool 🌊", "Dj 🔥"].map((item) => (
+                  <span key={item} className="bg-white/60 px-4 py-2 rounded-xl text-[10px] font-bold text-cyan-950 uppercase border border-white/40 shadow-sm">
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        <img src={ringYellow} className="hidden sm:block absolute z-[2] left-[5%] top-[15%] w-20 opacity-50" alt="" />
-        <img src={ringPink} className="hidden sm:block absolute z-[2] right-[5%] bottom-[10%] w-24 opacity-50" alt="" />
+        {/* RINGS - Agregado pointer-events-none para que no bloqueen el click en móvil */}
+        <img src={ringYellow} className="hidden sm:block absolute z-[2] left-[5%] top-[15%] w-20 opacity-50 pointer-events-none" alt="" />
+        <img src={ringPink} className="hidden sm:block absolute z-[2] right-[5%] bottom-[10%] w-24 opacity-50 pointer-events-none" alt="" />
       </div>
     </section>
   );
