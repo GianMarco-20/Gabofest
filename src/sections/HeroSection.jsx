@@ -1,37 +1,15 @@
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useRef } from "react";
 import PrimaryButton from "../ui/PrimaryButton";
 import logoScript from "../assets/hero/logo-script.png";
 import frame from "../assets/hero/frame.png";
 import ringYellow from "../assets/hero/ring-yellow.png";
 import ringPink from "../assets/hero/ring-pink.png";
 
-export default function HeroSection() {
+// ✅ Recibimos onScrollClick desde App.jsx
+export default function HeroSection({ onScrollClick }) {
   const wrapRef = useRef(null);
 
-  // ✅ FUNCIÓN DE SCROLL ULTRA-ROBUSTA
-  const handleScroll = (e) => {
-    if (e) {
-      // Intentamos prevenir el comportamiento por defecto pero permitimos que el evento fluya
-      if (e.cancelable) e.preventDefault();
-    }
-
-    const target = document.getElementById("registro");
-    if (!target) return;
-
-    // 1. Intento con scrollIntoView nativo
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-
-    // 2. Fallback para móviles (iOS/Android) usando coordenadas
-    setTimeout(() => {
-      const offsetTop = target.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: "smooth"
-      });
-    }, 50);
-  };
-
-  // ✅ SOLO ACTIVAR MOVIMIENTO SI NO ES TÁCTIL
+  // ✅ SOLO ACTIVAR MOVIMIENTO SI NO ES TÁCTIL (Mejora rendimiento en móvil)
   const onMouseMove = (e) => {
     if (window.matchMedia("(pointer: coarse)").matches) return; 
     
@@ -53,7 +31,7 @@ export default function HeroSection() {
   };
 
   const bubbles = useMemo(() => {
-    const n = 60; // Reducido para mejor performance en móvil
+    const n = 60;
     const rand01 = (i) => {
       const x = Math.sin(i * 437.123) * 10000;
       return x - Math.floor(x);
@@ -133,19 +111,21 @@ export default function HeroSection() {
 
               <div className="pt-4">
                 <PrimaryButton
-                  href="#registro"
-                  // 🔥 TRUCO FINAL: disparar en TouchStart para evitar lag
-                  onTouchStart={handleScroll}
-                  onClick={handleScroll}
-                  className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation"
+                  // ✅ Ejecuta la prop del padre
+                  onClick={onScrollClick}
+                  // ✅ Fix para móvil: onTouchEnd evita el lag del click
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    onScrollClick();
+                  }}
+                  className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer"
                 >
                   CONFIRMAR ASISTENCIA
                 </PrimaryButton>
               </div>
 
-              {/* TAGS ADAPTADOS PARA MÓVIL */}
               <div className="flex flex-wrap justify-center gap-2 mt-8">
-                {["Chuleteada 🍖", "Música 🎶", "Pool 🌊", "Dj 🔥"].map((item, idx) => (
+                {["Chuleteada 🍖", "Música 🎶", "Pool 🌊", "Dj 🔥"].map((item) => (
                   <span key={item} className="bg-white/60 px-4 py-2 rounded-xl text-[10px] font-bold text-cyan-950 uppercase border border-white/40 shadow-sm">
                     {item}
                   </span>
@@ -155,7 +135,6 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* RINGS - Ocultos en pantallas muy pequeñas para evitar estorbar el click */}
         <img src={ringYellow} className="hidden sm:block absolute z-[2] left-[5%] top-[15%] w-20 opacity-50" alt="" />
         <img src={ringPink} className="hidden sm:block absolute z-[2] right-[5%] bottom-[10%] w-24 opacity-50" alt="" />
       </div>
