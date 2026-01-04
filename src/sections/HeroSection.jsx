@@ -1,6 +1,6 @@
 import { useMemo, useRef } from "react";
 import PrimaryButton from "../ui/PrimaryButton";
-import { eventConfig } from "../config/eventConfig"; 
+import { eventConfig } from "../config/eventConfig";
 import frame from "../assets/hero/frame.png";
 import ringYellow from "../assets/hero/ring-yellow.png";
 import ringPink from "../assets/hero/ring-pink.png";
@@ -9,13 +9,22 @@ import logoScript from "../assets/hero/logo-script.png";
 export default function HeroSection() {
   const wrapRef = useRef(null);
 
-  // ✅ FIX: scroll más compatible en móvil que scrollIntoView(smooth)
-  const scrollToRegister = () => {
+  // ✅ FIX MOBILE: scroll robusto (iOS/Android) + fallback
+  const scrollToRegister = (e) => {
+    // en móviles ayuda a que no “cancele” el scroll
+    e?.preventDefault?.();
+
     const target = document.getElementById("registro");
     if (!target) return;
 
-    const y = target.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: y, behavior: "smooth" });
+    // intento normal
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // fallback (más confiable en móvil)
+    requestAnimationFrame(() => {
+      const y = target.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    });
   };
 
   const onMouseMove = (e) => {
@@ -86,7 +95,6 @@ export default function HeroSection() {
           from { opacity: 0; transform: scale(0.5) translateY(20px); }
           to { opacity: 1; transform: scale(1) translateY(0); }
         }
-
         .animate-reveal { animation: revealUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         .animate-fade-down { animation: fadeInDown 1s ease-out 0.4s backwards; }
         .logo-float { animation: floating 5s ease-in-out infinite; will-change: transform; }
@@ -115,7 +123,7 @@ export default function HeroSection() {
       {/* 1. FONDO */}
       <div
         className="hero-bg absolute -inset-[1px] z-0 bg-cover bg-center bg-no-repeat"
-        style={{ 
+        style={{
           backgroundImage: `url(${frame})`,
           height: "101%",
           width: "100.5%",
@@ -144,8 +152,6 @@ export default function HeroSection() {
         ref={wrapRef}
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
-        // ✅ FIX: defaults para mobile (no hay mousemove)
-        style={{ "--px": "0px", "--py": "0px" }}
         className="relative z-10 w-full h-full flex items-center justify-center p-6 lg:p-12"
       >
         <div
@@ -189,44 +195,52 @@ export default function HeroSection() {
 
               <div className="pt-4">
                 <PrimaryButton
+                  type="button"
                   onClick={scrollToRegister}
-                  // ✅ FIX: en móvil es más confiable que solo click
+                  onTouchEnd={scrollToRegister}
                   onPointerUp={scrollToRegister}
-                  className="bg-cyan-600 hover:bg-cyan-500 text-white font-black py-5 px-14 lg:py-6 lg:px-20 rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 tracking-[0.2em] text-[12px] lg:text-sm border-b-4 border-cyan-800"
+                  className="touch-manipulation bg-cyan-600 hover:bg-cyan-500 text-white font-black py-5 px-14 lg:py-6 lg:px-20 rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 tracking-[0.2em] text-[12px] lg:text-sm border-b-4 border-cyan-800"
                 >
                   CONFIRMAR ASISTENCIA
                 </PrimaryButton>
               </div>
 
               <div className="flex flex-wrap justify-center gap-3 lg:gap-5 mt-10">
-                {["Chuleteada 🍖🔥", "Música 🎶🎧", "Pool 🌊🏊‍♂️", "Dj en vivo 🎧🔥🕺"].map((item, idx) => (
-                  <span
-                    key={item}
-                    style={{
-                      animation: `cardPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${1 + idx * 0.15}s backwards`,
-                    }}
-                    className="bg-white/70 px-6 py-3 rounded-2xl text-[11px] lg:text-xs font-black text-cyan-950 uppercase tracking-tight border border-white/80 shadow-md hover:shadow-cyan-200/50 hover:-translate-y-3 hover:bg-white transition-all duration-300 cursor-default"
-                  >
-                    {item}
-                  </span>
-                ))}
+                {["Chuleteada 🍖🔥", "Música 🎶🎧", "Pool 🌊🏊‍♂️", "Dj en vivo 🎧🔥🕺"].map(
+                  (item, idx) => (
+                    <span
+                      key={item}
+                      style={{
+                        animation: `cardPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${
+                          1 + idx * 0.15
+                        }s backwards`,
+                      }}
+                      className="bg-white/70 px-6 py-3 rounded-2xl text-[11px] lg:text-xs font-black text-cyan-950 uppercase tracking-tight border border-white/80 shadow-md hover:shadow-cyan-200/50 hover:-translate-y-3 hover:bg-white transition-all duration-300 cursor-default"
+                    >
+                      {item}
+                    </span>
+                  )
+                )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* ✅ FIX: que NO intercepten el tap en móvil */}
         <img
           src={ringYellow}
           alt=""
-          className="pointer-events-none absolute z-[2] left-[8%] top-[15%] w-20 lg:w-32 opacity-60 smooth-move"
-          style={{ transform: `translate3d(calc(var(--px) * 2), calc(var(--py) * 2), 0) rotate(15deg)` }}
+          className="absolute z-[2] left-[8%] top-[15%] w-20 lg:w-32 opacity-60 smooth-move"
+          style={{
+            transform: `translate3d(calc(var(--px) * 2), calc(var(--py) * 2), 0) rotate(15deg)`,
+          }}
         />
         <img
           src={ringPink}
           alt=""
-          className="pointer-events-none absolute z-[2] right-[8%] bottom-[10%] w-24 lg:w-40 opacity-60 smooth-move"
-          style={{ transform: `translate3d(calc(var(--px) * -2), calc(var(--py) * -2), 0) rotate(-15deg)` }}
+          className="absolute z-[2] right-[8%] bottom-[10%] w-24 lg:w-40 opacity-60 smooth-move"
+          style={{
+            transform: `translate3d(calc(var(--px) * -2), calc(var(--py) * -2), 0) rotate(-15deg)`,
+          }}
         />
       </div>
     </section>
