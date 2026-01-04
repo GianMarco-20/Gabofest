@@ -10,28 +10,26 @@ export default function HeroSection() {
 
   // ✅ FUNCIÓN DE SCROLL ROBUSTA
   const handleScroll = (e) => {
-    // 1. Intentamos que el navegador no se confunda con el href
-    if (e && e.preventDefault) e.preventDefault();
+  // Prevenir que el navegador intente recargar o saltar
+  if (e && e.cancelable) e.preventDefault();
 
-    const target = document.getElementById("registro");
-    
-    if (target) {
-      // 2. Scroll nativo
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
+  const target = document.getElementById("registro");
+  
+  if (target) {
+    // Opción A: Scroll suave nativo
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
 
-      // 3. Refuerzo manual por si el móvil ignora el paso anterior
-      setTimeout(() => {
-        const top = target.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({
-          top: top,
-          behavior: "smooth"
-        });
-      }, 50);
-    } else {
-      // Fallback extremo: si el JS falla, el href="#registro" del componente original actuará
-      window.location.hash = "registro";
-    }
-  };
+    // Opción B: Refuerzo para móviles que ignoran el behavior smooth
+    // Usamos un tiempo corto para asegurar que el render ya ocurrió
+    setTimeout(() => {
+      const offset = target.offsetTop;
+      window.scrollTo({
+        top: offset,
+        behavior: "smooth"
+      });
+    }, 100);
+  }
+};
 
   // ✅ PARALLAX (SOLO DESKTOP)
   const onMouseMove = (e) => {
@@ -133,15 +131,25 @@ export default function HeroSection() {
               </p>
 
               <div className="pt-4">
-                <PrimaryButton
-                  href="#registro"
-                  onClick={handleScroll}
-                  // En móviles onTouchEnd es el más fiable
-                  onTouchEnd={handleScroll}
-                  className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer"
-                >
-                  CONFIRMAR ASISTENCIA
-                </PrimaryButton>
+              <PrimaryButton
+                // 1. QUITAMOS el href="#registro" (Esto causa el conflicto en móvil)
+                type="button" 
+                
+                // 2. Usamos onClick como evento principal
+                onClick={handleScroll}
+                
+                // 3. IMPORTANTE: En móvil, 'onPointerDown' es mejor que onTouchEnd 
+                // porque se activa ANTES de que el navegador intente hacer scroll manual
+                onPointerDown={(e) => {
+                  // Evitamos que el toque se propague a otros elementos
+                  e.stopPropagation();
+                  handleScroll(e);
+                }}
+                
+                className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer"
+              >
+                CONFIRMAR ASISTENCIA
+              </PrimaryButton>
               </div>
 
               <div className="flex flex-wrap justify-center gap-2 mt-8">
