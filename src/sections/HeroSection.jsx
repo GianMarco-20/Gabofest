@@ -98,9 +98,13 @@ export default function HeroSection() {
           
           <div className="backdrop-blur-2xl bg-white/85 border border-white/60 rounded-[45px] md:rounded-[80px] px-4 py-8 md:p-12 lg:px-20 lg:py-10 shadow-2xl text-center hero-card">
             
-            {/* LOGO REDUCIDO */}
+ {/* LOGO: Tamaño aumentado a 240px en móvil */}
             <div className="animate-float mb-6 md:mb-10">
-              <img src={logoScript} alt="Logo" className="mx-auto w-full max-w-[240px] md:max-w-[220px] lg:max-w-[340px] drop-shadow-md logo-img" />
+              <img 
+                src={logoScript} 
+                alt="Logo" 
+                className="mx-auto w-full max-w-[240px] md:max-w-[220px] lg:max-w-[340px] drop-shadow-md logo-img" 
+              />
             </div>
 
             {/* TÍTULO REDUCIDO */}
