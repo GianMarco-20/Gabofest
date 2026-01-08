@@ -8,23 +8,23 @@ import ringPink from "../assets/hero/ring-pink.png";
 export default function HeroSection() {
   const wrapRef = useRef(null);
 
-  // Función de desplazamiento suave
   const handleScroll = (e) => {
-    // Prevenir comportamientos predeterminados que pueden interferir
+    // Prevenir que el comportamiento predeterminado (recarga o desplazamiento) se ejecute en móviles
     if (e && e.cancelable) e.preventDefault();
 
     const target = document.getElementById("registro");
     if (target) {
+      // Intentamos scrollIntoView para los navegadores que lo soportan
       target.scrollIntoView({ behavior: "smooth", block: "start" });
 
-      // Fallback para móviles que ignoran el smooth scrolling
+      // Fallback para móviles que no manejan scrollIntoView correctamente
       const offset = target.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({ top: offset, behavior: "smooth" });
     }
   };
 
   const onMouseMove = (e) => {
-    if (window.matchMedia("(pointer: coarse)").matches) return; // Evita el parallax en móviles
+    if (window.matchMedia("(pointer: coarse)").matches) return; // No hacer el parallax en móviles
     const el = wrapRef.current;
     if (!el) return;
     const { left, top, width, height } = el.getBoundingClientRect();
@@ -41,9 +41,8 @@ export default function HeroSection() {
     el.style.setProperty("--py", "0px");
   };
 
-  // Generación de burbujas animadas
   const bubbles = useMemo(() => {
-    const n = 30; // Menor cantidad de burbujas para evitar saturar el toque
+    const n = 30; // Menos burbujas para evitar interferencia con los toques
     const rand01 = (i) => {
       const x = Math.sin(i * 437.123) * 10000;
       return x - Math.floor(x);
@@ -72,7 +71,7 @@ export default function HeroSection() {
         .animate-fade-down { animation: fadeInDown 1s ease-out 0.4s backwards; }
         .logo-float { animation: floating 5s ease-in-out infinite; will-change: transform; }
         .smooth-move { transition: transform 0.4s ease-out; will-change: transform; }
-        /* CRÍTICO: Las burbujas NO deben recibir eventos táctiles */
+        /* Las burbujas no deben recibir eventos táctiles */
         .bubble-hero-back { position: absolute; top: -50px; z-index: 1; pointer-events: none !important; border-radius: 50%; animation: bubbleFallHero linear infinite; will-change: transform; }
       `}</style>
 
@@ -115,11 +114,12 @@ export default function HeroSection() {
               </p>
 
               <div className="pt-4 relative z-[50]">
+                {/* Evento onTouchStart para dispositivos móviles */}
                 <PrimaryButton
                   onClick={handleScroll}
                   onTouchStart={(e) => {
-                    e.preventDefault();
-                    handleScroll(e);
+                    e.preventDefault(); // Evitamos el comportamiento predeterminado
+                    handleScroll(e); // Ejecutamos la función de desplazamiento
                   }}
                   className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer pointer-events-auto"
                 >
@@ -136,3 +136,4 @@ export default function HeroSection() {
     </section>
   );
 }
+
