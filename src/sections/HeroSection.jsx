@@ -100,7 +100,7 @@ export default function HeroSection() {
             
             {/* LOGO REDUCIDO */}
             <div className="animate-float mb-6 md:mb-10">
-              <img src={logoScript} alt="Logo" className="mx-auto w-full max-w-[160px] md:max-w-[200px] lg:max-w-[340px] drop-shadow-md logo-img" />
+              <img src={logoScript} alt="Logo" className="mx-auto w-full max-w-[240px] md:max-w-[220px] lg:max-w-[340px] drop-shadow-md logo-img" />
             </div>
 
             {/* TÍTULO REDUCIDO */}
