@@ -28,7 +28,7 @@ export default function HeroSection() {
   const bubbles = Array.from({ length: 35 });
 
   return (
-    <section className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-slate-900 isolate p-3 md:p-4">
+    <section className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-slate-900 isolate p-2 md:p-4">
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-8px) rotate(1deg); } }
@@ -53,7 +53,7 @@ export default function HeroSection() {
 
         @media (max-width: 768px) {
           .hero-card {
-            padding: 2rem 1.25rem !important; /* Reducido de 3rem */
+            padding: 0.5rem 1.25rem !important; /* Reducido de 3rem */
           }
           .text-title {
             font-size: 2.8rem !important; /* Reducido de 3.2rem */
@@ -96,7 +96,7 @@ export default function HeroSection() {
       <div ref={wrapRef} onMouseMove={onMouseMove} className="relative z-20 w-full max-w-[96%] lg:max-w-6xl mx-auto">
         <div className="transition-transform duration-700 ease-out" style={{ transform: `translate3d(var(--px, 0px), var(--py, 0px), 0)` }}>
           
-          <div className="backdrop-blur-2xl bg-white/85 border border-white/60 rounded-[45px] md:rounded-[80px] px-4 py-8 md:p-12 lg:px-20 lg:py-10 shadow-2xl text-center hero-card">
+          <div className="backdrop-blur-2xl bg-white/85 border border-white/60 rounded-[45px] md:rounded-[80px] px-4 py-2 md:p-12 lg:px-20 lg:py-10 shadow-2xl text-center hero-card">
             
  {/* LOGO: Tamaño aumentado a 240px en móvil */}
             <div className="animate-float mb-6 md:mb-10">
