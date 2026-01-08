@@ -119,12 +119,15 @@ export default function HeroSection() {
 
               <div className="pt-4 relative z-[50]">
                 <PrimaryButton
-                  // Cambiamos a onClick puro, pero forzamos que sea un elemento clickeable real
-                  onClick={handleScroll}
-                  className="bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer relative z-[100]"
-                >
-                  CONFIRMAR ASISTENCIA
-                </PrimaryButton>
+                onClick={handleScroll}  // Click para desktop
+                onTouchStart={(e) => {  // Toque para dispositivos móviles
+                  e.preventDefault();
+                  handleScroll(e);
+                }}
+                className="bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer relative z-[100]"
+              >
+                CONFIRMAR ASISTENCIA
+              </PrimaryButton>
               </div>
             </div>
           </div>
