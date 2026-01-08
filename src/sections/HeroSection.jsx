@@ -53,23 +53,36 @@ export default function HeroSection() {
 
         /* Estilo específico para Android */
         @media (max-width: 768px) and (pointer: coarse) {
+          /* Aseguramos que el contenido ocupe toda la pantalla */
           .hero-content {
-            font-size: 1.2rem; /* Aumentar tamaño del contenido */
-            padding: 10px; /* Reducir padding */
+            font-size: 1.5rem; /* Aumentamos el tamaño del contenido */
+            padding: 0; /* Eliminamos padding */
+            margin-top: 0; /* Eliminamos margen superior */
+            margin-bottom: 0; /* Eliminamos margen inferior */
+            min-height: 100vh; /* Hacemos que ocupe toda la pantalla */
           }
 
+          /* Título más grande */
           .text-title {
-            font-size: 2rem; /* Título más grande */
+            font-size: 2.5rem;
           }
 
+          /* Burbujas más pequeñas */
           .bubble {
-            width: 20px;
-            height: 20px;
+            width: 15px;
+            height: 15px;
           }
 
+          /* El contenido de la tarjeta debe estar más cerca de los bordes */
           .card {
-            padding: 12px;
-            margin: 0; /* Eliminar márgenes */
+            padding: 10px;
+            margin: 0;
+          }
+
+          /* Hacemos que los elementos estén en una sola columna */
+          .grid {
+            grid-template-columns: 1fr;
+            gap: 4px; /* Reducimos el espacio entre elementos */
           }
         }
       `}</style>
