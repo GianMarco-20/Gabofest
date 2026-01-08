@@ -45,7 +45,7 @@ function LoadingScreen() {
         </h2>
         
         <p className="text-cyan-400/80 font-bold text-sm md:text-base tracking-[0.4em] uppercase mb-8 animate-bubble-text drop-shadow-md text-center">
-          Fundo Linda Pau
+          Gabo Fest
         </p>
 
         {/* Barra de progreso estilo neón */}
