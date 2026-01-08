@@ -1,65 +1,86 @@
-import { useEffect } from "react";
-import PrimaryButton from "../ui/PrimaryButton";
-
-export default function HeroSection() {
-  const handleScroll = (e) => {
-    // Prevenir que el comportamiento predeterminado (recarga o desplazamiento) se ejecute en móviles
-    if (e && e.cancelable) e.preventDefault();
-
-    const target = document.getElementById("registro");
-    if (target) {
-      // Intentamos scrollIntoView para los navegadores que lo soportan
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-
-      // Fallback para móviles que no manejan scrollIntoView correctamente
-      const offset = target.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({ top: offset, behavior: "smooth" });
-    }
-  };
+export default function PrimaryButton({
+  className = "",
+  children,
+  href,
+  type = "button",
+  ...props
+}) {
+  const Comp = href ? "a" : "button";
 
   return (
-    <section className="relative w-full h-screen min-h-screen overflow-hidden bg-[#e0f7fa] isolate">
-      <div className="absolute z-0 bg-cover bg-center bg-no-repeat pointer-events-none">
-        {/* Fondo */}
-      </div>
+    <Comp
+      {...props}
+      href={href}
+      type={href ? undefined : type}
+      className={[
+        "group relative inline-flex items-center justify-center",
+        "rounded-full font-black uppercase tracking-[0.15em]",
+        "px-10 py-4 md:px-12 md:py-5 text-sm md:text-base lg:text-lg", // Padding adaptativo y tamaño de texto
+        "text-white overflow-visible",
+        "transition-all duration-200",
+        // ✅ Solo aplica hover en dispositivos con puntero
+        "@media(hover:hover):hover:scale-[1.06]",
+        "active:scale-[0.94] active:brightness-110",
+        "focus:outline-none focus:ring-4 focus:ring-cyan-300/50",
+        "touch-manipulation select-none", 
+        "cursor-pointer appearance-none", // Consistencia en Safari/Chrome
+        className,
+      ].join(" ")}
+      style={{
+        WebkitTapHighlightColor: "transparent",
+        WebkitAppearance: "none", // Reset para iOS
+        ...props.style,
+      }}
+      aria-label={children} // Agregar accesibilidad
+    >
+      <style>{`
+        @keyframes shimmerInfinite {
+          0% { transform: translateX(-200%) rotate(25deg); }
+          100% { transform: translateX(300%) rotate(25deg); }
+        }
+        @keyframes pulseGlow {
+          0%, 100% { opacity: 0.45; transform: scale(1); }
+          50% { opacity: 0.70; transform: scale(1.02); }
+        }
+      `}</style>
 
-      <div className="relative z-10 w-full h-full flex items-center justify-center p-4 lg:p-12">
-        <div className="relative z-20 w-full max-w-3xl">
-          <div className="relative z-30 backdrop-blur-md bg-white/40 p-6 lg:p-12 rounded-[40px] lg:rounded-[60px] shadow-2xl border border-white/60 text-center">
-            <div className="space-y-6">
-              <div className="flex justify-center items-center gap-3">
-                <span className="h-[1px] w-6 bg-cyan-800/30"></span>
-                <p className="text-cyan-900 font-bold uppercase tracking-[0.3em] text-[10px]">Sábado 7 de febrero</p>
-                <span className="h-[1px] w-6 bg-cyan-800/30"></span>
-              </div>
+      {/* 1. Glow exterior */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 rounded-full
+          bg-gradient-to-r from-cyan-400 via-sky-500 to-teal-400
+          blur-xl opacity-40
+          animate-[pulseGlow_4s_infinite]
+          will-change-transform"
+      />
 
-              <h2 className="text-4xl lg:text-7xl font-black tracking-tighter">
-                <span className="bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-600">
-                  Fundo Linda Pau
-                </span>
-              </h2>
+      {/* 2. Cuerpo del botón */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-full
+          bg-gradient-to-br from-cyan-500 via-sky-500 to-teal-600
+          shadow-[0_8px_20px_rgba(14,165,233,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)]
+          border-b-[3px] border-cyan-800/60"
+      />
 
-              <p className="text-slate-700 font-medium italic text-sm lg:text-lg">
-                Confirma tu asistencia para que no falte nada. ✨
-              </p>
+      {/* 3. Shimmer infinito */}
+      <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-full">
+        <span
+          className="absolute inset-0 w-[60%] h-[200%] -top-1/2
+            bg-gradient-to-r from-transparent via-white/30 to-transparent
+            animate-[shimmerInfinite_5s_infinite_linear]
+            will-change-transform"
+        />
+      </span>
 
-              <div className="pt-4">
-                {/* Botón que maneja tanto click como touch */}
-                <PrimaryButton
-                  onClick={handleScroll}
-                  onTouchStart={(e) => {
-                    e.preventDefault(); // Evitamos el comportamiento predeterminado
-                    handleScroll(e); // Ejecutamos la función de desplazamiento
-                  }}
-                  className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer pointer-events-auto"
-                >
-                  CONFIRMAR ASISTENCIA
-                </PrimaryButton>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      {/* 4. Efecto de brillo al presionar */}
+      <span className="absolute inset-0 rounded-full bg-white opacity-0 
+        transition-opacity duration-200 active:opacity-10 pointer-events-none" />
+
+      {/* Contenido */}
+      <span className="relative z-10 drop-shadow-[0_2px_3px_rgba(0,0,0,0.3)] flex items-center gap-2">
+        {children}
+      </span>
+    </Comp>
   );
 }
