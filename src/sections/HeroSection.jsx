@@ -8,22 +8,23 @@ import ringPink from "../assets/hero/ring-pink.png";
 export default function HeroSection() {
   const wrapRef = useRef(null);
 
+  // Función de desplazamiento suave
   const handleScroll = (e) => {
-    // IMPORTANTE: En móvil, a veces el preventDefault bloquea la ejecución si no es cancelable
+    // Prevenir comportamientos predeterminados que pueden interferir
     if (e && e.cancelable) e.preventDefault();
 
     const target = document.getElementById("registro");
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
-      
-      // Fallback inmediato para móviles
+
+      // Fallback para móviles que ignoran el smooth scrolling
       const offset = target.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({ top: offset, behavior: "smooth" });
     }
   };
 
   const onMouseMove = (e) => {
-    if (window.matchMedia("(pointer: coarse)").matches) return; 
+    if (window.matchMedia("(pointer: coarse)").matches) return; // Evita el parallax en móviles
     const el = wrapRef.current;
     if (!el) return;
     const { left, top, width, height } = el.getBoundingClientRect();
@@ -40,8 +41,9 @@ export default function HeroSection() {
     el.style.setProperty("--py", "0px");
   };
 
+  // Generación de burbujas animadas
   const bubbles = useMemo(() => {
-    const n = 30; // Bajamos cantidad para evitar que las burbujas saturen el táctil
+    const n = 30; // Menor cantidad de burbujas para evitar saturar el toque
     const rand01 = (i) => {
       const x = Math.sin(i * 437.123) * 10000;
       return x - Math.floor(x);
@@ -89,13 +91,8 @@ export default function HeroSection() {
         onMouseLeave={onMouseLeave}
         className="relative z-10 w-full h-full flex items-center justify-center p-4 lg:p-12"
       >
-        <div 
-          className="relative z-20 w-full max-w-3xl smooth-move"
-          style={{ transform: `translate3d(var(--px, 0px), var(--py, 0px), 0)` }}
-        >
-          {/* Añadimos z-30 para asegurar que el contenido esté arriba de todo */}
+        <div className="relative z-20 w-full max-w-3xl smooth-move" style={{ transform: `translate3d(var(--px, 0px), var(--py, 0px), 0)` }}>
           <div className="relative z-30 backdrop-blur-md bg-white/40 p-6 lg:p-12 rounded-[40px] lg:rounded-[60px] shadow-2xl border border-white/60 text-center">
-            
             <div className="logo-float mb-6">
               <img src={logoScript} alt="Logo" className="mx-auto w-full max-w-[280px] lg:max-w-[420px] drop-shadow-xl" />
             </div>
@@ -118,23 +115,21 @@ export default function HeroSection() {
               </p>
 
               <div className="pt-4 relative z-[50]">
-            <PrimaryButton
-            onClick={handleScroll}
-            onTouchStart={(e) => {  // Solo en dispositivos táctiles
-              e.preventDefault();
-              handleScroll(e);
-            }}
-            className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer pointer-events-auto"
-          >
-            CONFIRMAR ASISTENCIA
-          </PrimaryButton>
-
+                <PrimaryButton
+                  onClick={handleScroll}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    handleScroll(e);
+                  }}
+                  className="relative z-[100] bg-cyan-600 active:bg-cyan-700 text-white font-black py-5 px-10 rounded-full shadow-xl transition-transform active:scale-95 tracking-widest text-[12px] border-b-4 border-cyan-800 touch-manipulation cursor-pointer pointer-events-auto"
+                >
+                  CONFIRMAR ASISTENCIA
+                </PrimaryButton>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Imágenes decorativas con pointer-events-none para que no "tapen" el botón */}
         <img src={ringYellow} className="hidden sm:block absolute z-[5] left-[5%] top-[15%] w-20 opacity-50 pointer-events-none" alt="" />
         <img src={ringPink} className="hidden sm:block absolute z-[5] right-[5%] bottom-[10%] w-24 opacity-50 pointer-events-none" alt="" />
       </div>
