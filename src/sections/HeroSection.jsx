@@ -7,15 +7,6 @@ import ringPink from "../assets/hero/ring-pink.png";
 export default function HeroSection() {
   const wrapRef = useRef(null);
 
-  // Función de scroll suave
-  const handleAnchorClick = (e) => {
-    const target = document.getElementById("registro");
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
   const onMouseMove = (e) => {
     if (window.matchMedia("(pointer: coarse)").matches) return;
     const el = wrapRef.current;
@@ -23,96 +14,161 @@ export default function HeroSection() {
     const { left, top, width, height } = el.getBoundingClientRect();
     const x = (e.clientX - left) / width - 0.5;
     const y = (e.clientY - top) / height - 0.5;
-    el.style.setProperty("--px", (x * 15).toFixed(2) + "px");
-    el.style.setProperty("--py", (y * 15).toFixed(2) + "px");
+    el.style.setProperty("--px", (x * 10).toFixed(2) + "px");
+    el.style.setProperty("--py", (y * 10).toFixed(2) + "px");
   };
 
-  const bubbles = useMemo(() => {
-    const n = 12; 
-    const rand01 = (i) => {
-      const x = Math.sin(i * 437.123) * 10000;
-      return x - Math.floor(x);
-    };
-    return Array.from({ length: n }).map((_, i) => {
-      const r = rand01(i + 1);
-      return { left: r * 100, size: 10 + r * 25, dur: 12 + r * 8, op: 0.1 + r * 0.2 };
-    });
-  }, []);
+  const partyFeatures = [
+    { label: "Chuleteada", icon: "🍖", color: "from-orange-400 to-red-500" },
+    { label: "DJ en Vivo", icon: "🎧", color: "from-purple-500 to-indigo-600" },
+    { label: "Piscina", icon: "💦", color: "from-blue-400 to-cyan-500" },
+    { label: "Open Bar", icon: "🍹", color: "from-pink-500 to-rose-500" },
+  ];
+
+  const bubbles = Array.from({ length: 35 });
 
   return (
-    <section className="relative w-full h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-[#f0f9ff] isolate">
+    <section className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-slate-900 isolate p-1 md:p-4">
       <style>{`
-        @keyframes revealUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        @keyframes bubbleFall { 0% { transform: translateY(-10vh); opacity: 0; } 50% { opacity: 0.3; } 100% { transform: translateY(110vh); opacity: 0; } }
-        .bubble-anim { animation: bubbleFall linear infinite; pointer-events: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-8px) rotate(1deg); } }
+        @keyframes rise {
+          0% { transform: translateY(0) scale(0.5); opacity: 0; }
+          20% { opacity: 0.5; }
+          80% { opacity: 0.5; }
+          100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
+        }
+        .animate-fade { animation: fadeIn 0.6s ease-out forwards; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .bubble {
+          position: absolute;
+          bottom: -50px;
+          background: rgba(255, 255, 255, 0.4);
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 5;
+          animation: rise linear infinite;
+        }
+
+        /* Estilo específico para Android */
+        @media (max-width: 768px) and (pointer: coarse) {
+          .hero-content {
+            font-size: 1.2rem; /* Aumentar tamaño del contenido */
+            padding: 10px; /* Reducir padding */
+          }
+
+          .text-title {
+            font-size: 2rem; /* Título más grande */
+          }
+
+          .bubble {
+            width: 20px;
+            height: 20px;
+          }
+
+          .card {
+            padding: 12px;
+            margin: 0; /* Eliminar márgenes */
+          }
+        }
       `}</style>
 
-      {/* Fondo y Burbujas */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-cover bg-center opacity-60" style={{ backgroundImage: `url(${frame})` }} />
-        {bubbles.map((b, i) => (
-          <div key={i} className="absolute top-[-5%] bubble-anim" style={{ left: `${b.left}%`, width: `${b.size}px`, height: `${b.size}px`, animationDuration: `${b.dur}s`, background: `rgba(255, 255, 255, 0.5)`, borderRadius: '50%' }} />
+      {/* FONDO */}
+      <div className="absolute inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${frame})` }}
+        />
+      </div>
+
+      {/* BURBUJAS */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        {bubbles.map((_, i) => (
+          <div
+            key={i}
+            className="bubble"
+            style={{
+              width: `${Math.random() * 30 + 10}px`,
+              height: `${Math.random() * 30 + 10}px`,
+              left: `${Math.random() * 100}%`,
+              animationDuration: `${Math.random() * 2 + 2}s`,
+              animationDelay: `${Math.random() * 8}s`,
+            }}
+          />
         ))}
       </div>
 
       <div
         ref={wrapRef}
         onMouseMove={onMouseMove}
-        className="relative z-20 w-full flex items-center justify-center p-4"
+        className="relative z-20 w-full max-w-[95%] lg:max-w-6xl mx-auto" 
       >
-        <div className="relative w-full max-w-2xl transition-transform duration-300" style={{ transform: `translate3d(var(--px, 0px), var(--py, 0px), 0)` }}>
-          
-          {/* Tarjeta Glassmorphism */}
-          <div className="backdrop-blur-md bg-white/40 p-10 md:p-16 rounded-[50px] border border-white/60 text-center shadow-2xl">
+        <div 
+          className="transition-transform duration-700 ease-out"
+          style={{ transform: `translate3d(var(--px, 0px), var(--py, 0px), 0)` }}
+        >
+          {/* TARJETA: px-3 en móvil para casi tocar los bordes */}
+          <div className="backdrop-blur-2xl bg-white/80 border border-white/40 rounded-[35px] md:rounded-[80px] px-3 py-6 md:p-12 lg:px-20 lg:py-10 shadow-[0_50px_100px_rgba(0,0,0,0.5)] text-center hero-content">
             
-            {/* Logo */}
-            <div className="animate-[floating_5s_infinite] mb-8">
-              <img src={logoScript} alt="Logo" className="mx-auto w-full max-w-[280px] md:max-w-[420px] drop-shadow-lg" />
+            {/* LOGO AGRANDADO EN MÓVIL */}
+            <div className="animate-float mb-4 lg:mb-8">
+              <img 
+                src={logoScript} 
+                alt="Logo" 
+                className="mx-auto w-full max-w-[180px] md:max-w-[200px] lg:max-w-[340px] drop-shadow-md" 
+              />
             </div>
 
-            <div className="space-y-8 animate-[revealUp_1s_ease-out]">
-              <div className="space-y-2">
-                <h2 className="text-5xl md:text-8xl font-black text-slate-900 leading-none tracking-tighter">
-                  Fundo <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-teal-500">Linda Pau</span>
-                </h2>
-                <p className="text-cyan-900/70 font-bold uppercase tracking-[0.3em] text-[10px] pt-2">Sábado 7 de Febrero • 2026</p>
-              </div>
-
-              <p className="text-slate-700 font-medium text-sm md:text-xl max-w-xs md:max-w-md mx-auto leading-relaxed">
-                Tu presencia hará este día inolvidable. <br/> Confirma tu asistencia aquí. ✨
+            {/* TÍTULO */}
+            <div className="space-y-1 md:space-y-2 mb-6 lg:mb-10 animate-fade">
+              <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-slate-900 tracking-tighter leading-[0.9] text-title">
+                Fundo <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-emerald-500">
+                  Linda Pau
+                </span>
+              </h1>
+              <p className="text-cyan-800 font-bold tracking-[0.3em] text-[8px] md:text-xs lg:text-sm uppercase">
+                Sábado • 07 Febrero • 2026
               </p>
+            </div>
 
-              {/* BOTÓN ÚNICO REFORZADO */}
-              <div className="pt-4 flex justify-center relative z-[100]">
-                <a
-                  href="#registro"
-                  onClick={handleAnchorClick}
-                  className="group relative inline-block overflow-hidden px-14 py-5 bg-gradient-to-r from-cyan-600 to-teal-500 rounded-full text-white font-black tracking-widest text-xs md:text-sm uppercase shadow-[0_15px_35px_rgba(14,165,233,0.3)] transition-all duration-300 active:scale-95 touch-manipulation"
-                  style={{ 
-                    WebkitTapHighlightColor: 'transparent',
-                    cursor: 'pointer'
-                  }}
+            {/* ATRACTIVOS: gap-2 en móvil para aprovechar espacio */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mb-8 lg:mb-10">
+              {partyFeatures.map((f, i) => (
+                <div 
+                  key={i}
+                  className="flex items-center lg:flex-col lg:justify-center gap-2 bg-white/60 rounded-xl p-2 md:p-5 border border-white transition-all hover:bg-white shadow-sm"
                 >
-                  {/* Brillo Shimmer al pasar el mouse */}
-                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-                  
-                  <span className="relative z-10">REGISTRARME AHORA</span>
-                </a>
+                  <div className={`w-8 h-8 md:w-14 md:h-14 shrink-0 rounded-lg md:rounded-2xl bg-gradient-to-br ${f.color} flex items-center justify-center text-lg md:text-3xl shadow-lg`}>
+                    {f.icon}
+                  </div>
+                  <span className="text-[8px] md:text-xs lg:text-[11px] font-black uppercase text-slate-800 tracking-tight lg:tracking-widest lg:text-center">
+                    {f.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* FRASE Y REGISTRO */}
+            <div className="animate-fade" style={{ animationDelay: '0.4s' }}>
+              <p className="text-slate-600 font-bold italic text-xs md:text-lg lg:text-xl mb-4 lg:mb-6 px-4">
+                "Prepárate para vivir una experiencia inolvidable"
+              </p>
+              
+              <div className="flex flex-col items-center gap-1.5 lg:gap-2">
+                <span className="text-[8px] md:text-[9px] lg:text-[10px] font-black uppercase tracking-[0.4em] text-cyan-600/80 animate-pulse">
+                  Desliza
+                </span>
+                <div className="w-1 h-5 lg:h-8 bg-gradient-to-b from-cyan-500 to-transparent rounded-full animate-bounce" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Decoraciones laterales */}
-      <img src={ringYellow} className="absolute z-[10] left-[5%] top-[20%] w-16 md:w-24 opacity-30 animate-pulse pointer-events-none" alt="" />
-      <img src={ringPink} className="absolute z-[10] right-[5%] bottom-[20%] w-20 md:w-32 opacity-30 animate-pulse pointer-events-none" alt="" />
-
-      {/* Fade inferior */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#f0f9ff] to-transparent z-10 pointer-events-none" />
+      {/* ANILLOS POSICIONADOS MÁS HACIA AFUERA */}
+      <img src={ringYellow} className="absolute top-[2%] left-[-8%] w-24 md:w-48 lg:w-64 opacity-20 animate-float pointer-events-none z-10" alt="" />
+      <img src={ringPink} className="absolute bottom-[2%] right-[-8%] w-32 md:w-56 lg:w-72 opacity-20 animate-float pointer-events-none z-10" alt="" style={{ animationDelay: '-3s' }} />
     </section>
   );
 }
