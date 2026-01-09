@@ -42,11 +42,15 @@ Una experiencia web inmersiva diseñada para la invitación y registro de la **G
 
 ```text
 src/
-├── assets/          # Imágenes y recursos visuales (Hero, Venue, Register)
-├── components/
-│   ├── ui/          # Componentes reutilizables (Botones)
-│   └── sections/    # Secciones principales (Hero, Venue, Register, Footer)
-├── config/          # Configuración global del evento (URLs, Fechas)
-└── App.jsx          # Lógica central y orquestación de animaciones
-
+├── assets/              # Recursos visuales organizados por sección
+│   ├── event/           # Imágenes generales del evento
+│   ├── hero/            # Logos, frames y anillos decorativos
+│   ├── register/        # Fondos de la sección de registro
+│   └── venue/           # Fotos de las instalaciones (piscina, entrada, etc.)
+├── config/              
+│   └── eventConfig.js   # ⚙️ Configuración central (Fechas, URLs de Maps y Forms)
+├── sections/            # Componentes de página (Hero, Venue, Register, Footer)
+├── ui/                  # Componentes de interfaz reutilizables (PrimaryButton)
+├── App.jsx              # Orquestador principal y lógica de Scroll Reveal
+└── App.css              # Estilos globales y definiciones de @keyframes
 
