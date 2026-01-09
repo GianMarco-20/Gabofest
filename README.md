@@ -27,7 +27,7 @@ Una experiencia web inmersiva diseñada para la invitación y registro de la **G
 
 1.  Clona el repositorio:
     ```bash
-    git clone [https://github.com/GianMarco-20/portafolio-dashboard.git](https://github.com/GianMarco-20/portafolio-dashboard.git)
+    git clone https://github.com/GianMarco-20/portafolio-dashboard.git Gabofest
     ```
 2.  Instala las dependencias:
     ```bash
