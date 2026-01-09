@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import HeroSection from "./sections/HeroSection";
 import EventInfoSection from "./sections/EventInfoSection";
 import VenueSection from "./sections/VenueSection";
@@ -7,45 +7,32 @@ import Footer from "./sections/Footer";
 
 // --- COMPONENTE DE CARGA ATRACTIVO (ESTILO FIESTA EN LA PISCINA) ---
 function LoadingScreen() {
-  const bubbles = useMemo(() =>
-    Array.from({ length: 15 }).map(() => ({
-      width: `${Math.random() * 20 + 10}px`,
-      height: `${Math.random() * 20 + 10}px`,
-      left: `${Math.random() * 100}%`,
-      animationDuration: `${Math.random() * 3 + 2}s`,
-      animationDelay: `${Math.random() * 3}s`,
-    })),
-  []); // Menos burbujas para no saturar (valores estables)
+  const bubbles = Array.from({ length: 15 }); // Menos burbujas para no saturar
 
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      aria-label="Cargando, por favor espera"
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900"
-    >
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
       {/* Fondo de resplandor tipo foco de fiesta */}
       <div 
         className="absolute inset-0 opacity-50"
         style={{
           background: `radial-gradient(circle at 50% 15%, rgba(139, 92, 246, 0.4) 0%, transparent 40%),
-                       radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.4) 0%, transparent 40%),
-                       radial-gradient(circle at 20% 60%, rgba(34, 211, 238, 0.4) 0%, transparent 40%)`,
+                      radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.4) 0%, transparent 40%),
+                      radial-gradient(circle at 20% 60%, rgba(34, 211, 238, 0.4) 0%, transparent 40%)`,
         }}
       />
 
       {/* Burbujas del Loading Screen */}
       <div className="absolute inset-0 pointer-events-none">
-        {bubbles.map((b, i) => (
+        {bubbles.map((_, i) => (
           <div
             key={i}
             className="bubble-loader"
             style={{
-              width: b.width,
-              height: b.height,
-              left: b.left,
-              animationDuration: b.animationDuration,
-              animationDelay: b.animationDelay,
+              width: `${Math.random() * 20 + 10}px`,
+              height: `${Math.random() * 20 + 10}px`,
+              left: `${Math.random() * 100}%`,
+              animationDuration: `${Math.random() * 3 + 2}s`,
+              animationDelay: `${Math.random() * 3}s`,
             }}
           />
         ))}
@@ -67,13 +54,44 @@ function LoadingScreen() {
         </div>
       </div>
 
-      {/* Animaciones y estilos para las burbujas movidos a src/App.css */}
+      <style>{`
+        @keyframes float-text {
+          0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
+          50% { transform: translateY(-5px) scale(1.02); opacity: 0.9; }
+        }
+        @keyframes bubble-text {
+            0%, 100% { transform: translateY(0); }
+            25% { transform: translateY(-3px); }
+            75% { transform: translateY(3px); }
+        }
+        @keyframes loading-neon {
+          0% { transform: translateX(-100%) scaleX(0.2); opacity: 0.3; }
+          50% { transform: translateX(0%) scaleX(1); opacity: 1; }
+          100% { transform: translateX(100%) scaleX(0.2); opacity: 0.3; }
+        }
+        @keyframes rise-loader {
+          0% { transform: translateY(0) scale(0.5); opacity: 0; }
+          20% { opacity: 0.5; }
+          80% { opacity: 0.5; }
+          100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
+        }
+        .bubble-loader {
+          position: absolute;
+          bottom: -50px;
+          background: rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          border-radius: 50%;
+          pointer-events: none;
+          animation: rise-loader linear infinite;
+        }
+      `}</style>
     </div>
   );
 }
 
 // --- OVERLAYS Y BLOQUES (sin cambios) ---
 function JoinOverlay({ tone = "cyan" }) {
+  // ... tu código de JoinOverlay ...
   const glow =
     tone === "cyan"
       ? "rgba(34,211,238,.22)"
@@ -121,10 +139,6 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const prevBodyMargin = document.body.style.margin;
-    const prevBodyOverflowX = document.body.style.overflowX;
-    const prevScrollBehavior = document.documentElement.style.scrollBehavior;
-
     document.body.style.margin = "0";
     document.body.style.overflowX = "hidden";
     document.documentElement.style.scrollBehavior = "smooth";
@@ -133,12 +147,7 @@ export default function App() {
       setIsLoading(false);
     }, 3000); // Un poco más de tiempo para apreciar la animación de fiesta
 
-    return () => {
-      clearTimeout(timer);
-      document.body.style.margin = prevBodyMargin;
-      document.body.style.overflowX = prevBodyOverflowX;
-      document.documentElement.style.scrollBehavior = prevScrollBehavior;
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   return (
