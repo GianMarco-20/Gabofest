@@ -1,16 +1,52 @@
-# React + Vite
+# 🌊 Gabo Fest 2026 - Event Landing Page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Lucide Icons](https://img.shields.io/badge/Lucide_Icons-FF5D01?style=for-the-badge)](https://lucide.dev/)
 
-Currently, two official plugins are available:
+Una experiencia web inmersiva diseñada para la invitación y registro de la **Gabo Fest 2026**. El proyecto destaca por una interfaz fluida, animaciones personalizadas de burbujas y un sistema de "Scroll Reveal" para una navegación elegante.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Características Principales
 
-## React Compiler
+* **🎬 Loading Screen Temático:** Pantalla de carga con efectos de burbujas ascendentes y barras de progreso neón que preparan al usuario para la experiencia.
+* **🎈 Hero Section Interactivo:** Efecto de movimiento Parallax basado en el ratón (Mouse Move) que reacciona a la posición del usuario.
+* **📸 Galería de Lugar (Venue):** Grid dinámico con PhotoCards que muestran los detalles del Fundo Linda Pau con efectos de zoom en hover.
+* **📱 Diseño Full Responsive:** Optimización crítica para dispositivos móviles, ajustando tamaños de fuente, espaciado y animaciones.
+* **📜 Scroll Reveal:** Implementación de *Intersection Observer* para que las secciones aparezcan suavemente mientras el usuario navega.
+* **🫧 Motor de Burbujas Dinámico:** Sistema de partículas CSS/JS que genera burbujas con tamaños, velocidades y opacidades aleatorias para simular una piscina.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tecnologías Utilizadas
 
-## Expanding the ESLint configuration
+* **React 18** - Estructura de componentes funcional.
+* **Tailwind CSS** - Estilizado rápido y diseño responsive.
+* **Lucide React** - Set de iconos modernos y consistentes.
+* **Hooks (useState, useEffect, useMemo, useRef)** - Gestión de estados complejos y optimización de rendimiento en animaciones.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Instalación y Uso
+
+1.  Clona el repositorio:
+    ```bash
+    git clone [https://github.com/GianMarco-20/portafolio-dashboard.git](https://github.com/GianMarco-20/portafolio-dashboard.git)
+    ```
+2.  Instala las dependencias:
+    ```bash
+    npm install
+    ```
+3.  Inicia el servidor de desarrollo:
+    ```bash
+    npm run dev
+    ```
+
+## 📂 Estructura del Proyecto
+
+```text
+src/
+├── assets/          # Imágenes y recursos visuales (Hero, Venue, Register)
+├── components/
+│   ├── ui/          # Componentes reutilizables (Botones)
+│   └── sections/    # Secciones principales (Hero, Venue, Register, Footer)
+├── config/          # Configuración global del evento (URLs, Fechas)
+└── App.jsx          # Lógica central y orquestación de animaciones
+
+
