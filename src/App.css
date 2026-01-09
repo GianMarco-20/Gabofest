@@ -40,3 +40,39 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Animaciones y estilos para LoadingScreen (burbujas y textos) */
+@keyframes float-text {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
+  50% { transform: translateY(-5px) scale(1.02); opacity: 0.9; }
+}
+@keyframes bubble-text {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-3px); }
+  75% { transform: translateY(3px); }
+}
+@keyframes loading-neon {
+  0% { transform: translateX(-100%) scaleX(0.2); opacity: 0.3; }
+  50% { transform: translateX(0%) scaleX(1); opacity: 1; }
+  100% { transform: translateX(100%) scaleX(0.2); opacity: 0.3; }
+}
+@keyframes rise-loader {
+  0% { transform: translateY(0) scale(0.5); opacity: 0; }
+  20% { opacity: 0.5; }
+  80% { opacity: 0.5; }
+  100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
+}
+
+.animate-float-text { animation: float-text 3s ease-in-out infinite; }
+.animate-bubble-text { animation: bubble-text 2.6s ease-in-out infinite; }
+.animate-loading-neon { animation: loading-neon 2.8s ease-in-out infinite; }
+
+.bubble-loader {
+  position: absolute;
+  bottom: -50px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: rise-loader linear infinite;
+}
