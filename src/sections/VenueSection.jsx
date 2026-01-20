@@ -117,7 +117,7 @@ export default function VenueSection() {
                 <ImageIcon size={14} /> Galería del Evento
               </div>
               <h2 className="text-4xl md:text-6xl font-black text-slate-800 tracking-tight leading-none">
-                Fundo<span className="text-cyan-500 italic">Linda Pau</span>
+                Fundo <span className="text-cyan-500 italic">Linda Pau</span>
               </h2>
             </div>
 
