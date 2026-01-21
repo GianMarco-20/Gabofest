@@ -3,21 +3,20 @@ import { eventConfig } from "../config/eventConfig";
 import { MapPin, Camera, Image as ImageIcon } from "lucide-react";
 import fondoLugar from "../assets/venue/fondovenue.png";
 import patio from "../assets/venue/patio.jpeg";
-import entrada from "../assets/venue/entrada.jpg";
 import piscina2 from "../assets/venue/piscina2.jpg";
 import decoracion from "../assets/venue/patio2.jpeg";
-import parrilla from "../assets/venue/parrilla.jpeg";
 import sala from "../assets/venue/estancia.jpeg";
 
-function PhotoCard({ label, imageSrc, heightClass = "h-40 md:h-48" }) {
+// Componente de Tarjeta de Foto Corregido
+function PhotoCard({ label, imageSrc, containerClass = "" }) {
   return (
-    <div className="group relative overflow-hidden rounded-[1.5rem] bg-white p-2 border border-cyan-100 shadow-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-cyan-300 w-full h-full">
-      <div className={`relative ${heightClass} w-full overflow-hidden rounded-[1.1rem] bg-slate-100 h-full`}>
+    <div className={`group relative overflow-hidden rounded-[1.5rem] bg-white p-2 border border-cyan-100 shadow-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-cyan-300 w-full h-full flex flex-col ${containerClass}`}>
+      <div className="relative flex-1 w-full overflow-hidden rounded-[1.1rem] bg-slate-100">
         {imageSrc ? (
           <img
             src={imageSrc}
             alt={label}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-cyan-200">
@@ -26,10 +25,10 @@ function PhotoCard({ label, imageSrc, heightClass = "h-40 md:h-48" }) {
           </div>
         )}
         
-        {/* Overlay de diseño: Gradiente y Etiqueta Interna */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+        {/* Overlay de diseño */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
         
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
           <div className="inline-block bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1.5 rounded-lg shadow-lg transform transition-transform duration-500 group-hover:scale-105">
             <span className="text-[10px] md:text-xs font-black text-white uppercase tracking-[0.2em] drop-shadow-md">
               {label}
@@ -43,7 +42,7 @@ function PhotoCard({ label, imageSrc, heightClass = "h-40 md:h-48" }) {
 
 export default function VenueSection() {
   const bubbles = useMemo(() => {
-    const n = 100; 
+    const n = 40; 
     const rand01 = (i) => {
       const x = Math.sin(i * 437.123) * 10000;
       return x - Math.floor(x);
@@ -63,7 +62,7 @@ export default function VenueSection() {
   }, []);
 
   return (
-    <section className="relative w-full py-16 md:py-24 px-4 overflow-hidden isolate">
+    <section className="relative w-full py-12 md:py-24 px-4 overflow-hidden isolate">
       <style>{`
         @keyframes bubbleFallVenue {
           0% { transform: translateY(-10vh) scale(0.8); opacity: 0; }
@@ -83,11 +82,7 @@ export default function VenueSection() {
 
       {/* FONDO PRINCIPAL */}
       <div className="absolute inset-0 -z-20">
-        <img
-          src={fondoLugar}
-          alt=""
-          className="h-full w-full object-cover"
-        />
+        <img src={fondoLugar} alt="" className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-cyan-900/20 backdrop-blur-[2px]" />
       </div>
 
@@ -108,15 +103,16 @@ export default function VenueSection() {
         />
       ))}
 
-      <div className="relative mx-auto max-w-6xl z-10 w-full">
-        <div className="rounded-[3rem] bg-white/80 backdrop-blur-xl border border-white shadow-2xl p-6 md:p-12">
+      <div className="relative mx-auto max-w-7xl z-10 w-full">
+        <div className="rounded-[2.5rem] md:rounded-[4rem] bg-white/80 backdrop-blur-xl border border-white shadow-2xl p-5 md:p-12">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+          {/* CABECERA */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div className="space-y-2 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 text-cyan-600 font-bold uppercase text-[11px] tracking-widest bg-cyan-100/50 px-4 py-1 rounded-full">
+              <div className="inline-flex items-center gap-2 text-cyan-600 font-bold uppercase text-[10px] md:text-[11px] tracking-widest bg-cyan-100/50 px-4 py-1 rounded-full">
                 <ImageIcon size={14} /> Galería del Evento
               </div>
-              <h2 className="text-4xl md:text-6xl font-black text-slate-800 tracking-tight leading-none">
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-slate-800 tracking-tight leading-none">
                 Fundo<span className="text-cyan-500 italic"> Linda Pau</span>
               </h2>
             </div>
@@ -125,39 +121,33 @@ export default function VenueSection() {
               href={eventConfig.mapsUrl}
               target="_blank"
               rel="noreferrer"
-              className="bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-4 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-3 shadow-lg shadow-cyan-200 hover:scale-105 active:scale-95 uppercase tracking-widest"
+              className="bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-4 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-3 shadow-lg shadow-cyan-200 hover:scale-105 active:scale-95 uppercase tracking-widest w-full md:w-auto"
             >
               Ubicación <MapPin size={18} />
             </a>
           </div>
 
-          {/* GRID MAESTRO - DISEÑO MEJORADO */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {/* GRID MAESTRO - CORREGIDO PARA EVITAR DESBORDAMIENTO */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 md:h-[600px] lg:h-[700px]">
             
-            {/* Patio Principal - Gran Formato */}
-            <div className="md:col-span-8 md:row-span-2">
-              <PhotoCard label="Patio" imageSrc={patio} heightClass="h-72 md:h-[500px]" />
+            {/* 1. Patio Principal (GRANDE) - Ocupa 8 de 12 columnas */}
+            <div className="md:col-span-8 md:row-span-3 h-[300px] md:h-full min-h-0">
+              <PhotoCard label="Patio Principal" imageSrc={patio} />
             </div>
 
-            {/* Entrada */}
-            <div className="md:col-span-4">
-              <PhotoCard label="Entrada" imageSrc={entrada} heightClass="h-52 md:h-[238px]" />
+            {/* 2. Piscina (Ocupa 4 columnas, fila 1) */}
+            <div className="md:col-span-4 md:row-span-1 h-[180px] md:h-full min-h-0">
+              <PhotoCard label="Área de Piscina" imageSrc={piscina2} />
             </div>
 
-            {/* Parrilla - Ahora con más altura vertical */}
-            <div className="md:col-span-4">
-              <PhotoCard label="Parrilla" imageSrc={parrilla} heightClass="h-64 md:h-[238px]" />
+            {/* 3. Vista (Ocupa 4 columnas, fila 2) */}
+            <div className="md:col-span-4 md:row-span-1 h-[180px] md:h-full min-h-0">
+              <PhotoCard label="Vista Exterior" imageSrc={decoracion} />
             </div>
 
-            {/* Fila Inferior */}
-            <div className="md:col-span-4">
-              <PhotoCard label="Piscina" imageSrc={piscina2} heightClass="h-52" />
-            </div>
-            <div className="md:col-span-4">
-              <PhotoCard label="Vista" imageSrc={decoracion} heightClass="h-52" />
-            </div>
-            <div className="md:col-span-4">
-              <PhotoCard label="Estancia / Salón" imageSrc={sala} heightClass="h-52" />
+            {/* 4. Estancia (Ocupa 4 columnas, fila 3) */}
+            <div className="md:col-span-4 md:row-span-1 h-[180px] md:h-full min-h-0">
+              <PhotoCard label="Salón Principal" imageSrc={sala} />
             </div>
 
           </div>
