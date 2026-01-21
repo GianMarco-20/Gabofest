@@ -22,8 +22,7 @@ export default function HeroSection() {
     { label: "Chuleteada", icon: "🍖", color: "from-orange-400 to-red-500" },
     { label: "DJ en Vivo", icon: "🎧", color: "from-purple-500 to-indigo-600" },
     { label: "Piscina", icon: "💦", color: "from-blue-400 to-cyan-500" },
-    { label: "Open Bar", icon: "🍹", color: "from-pink-500 to-rose-500" },
-  ];
+    { label: "Venta Exclusiva en Local", icon: "🚫🍾", color: "from-slate-700 to-slate-900" } ];
 
   const bubbles = Array.from({ length: 35 });
 
