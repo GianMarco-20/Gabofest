@@ -16,8 +16,6 @@ export default function RegisterSection() {
   const formSteps = [
     { icon: <UserPlus size={18} />, text: "Nombre y Apellido" },
     { icon: <Clock size={18} />, text: "Hora de llegada" },
-    { icon: <BedDouble size={18} />, text: "¿Te quedas a dormir?" },
-    { icon: <QrCode size={18} />, text: "Aporte" },
   ];
 
   const bubbles = useMemo(() => {
