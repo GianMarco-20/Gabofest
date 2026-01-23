@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Sparkles, MessageCircle, ArrowRight } from "lucide-react";
+import { Sparkles, MessageCircle, ArrowRight, Calendar, MapPin } from "lucide-react";
 import fondoAgua from "../assets/register/fondoregister.png";
 
 export default function RegisterSection() {
@@ -29,7 +29,7 @@ export default function RegisterSection() {
   )}`;
 
   return (
-    <section id="registro" className="relative w-full py-20 md:py-32 px-4 flex items-center justify-center bg-white overflow-hidden">
+    <section id="registro" className="relative w-full py-24 md:py-40 px-4 flex items-center justify-center bg-white overflow-hidden">
       
       <style>{`
         @keyframes bubbleFall {
@@ -37,14 +37,6 @@ export default function RegisterSection() {
           10% { opacity: var(--op); }
           90% { opacity: var(--op); }
           100% { transform: translate3d(0, 110vh, 0) scale(1.1); opacity: 0; }
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-        @keyframes pulse-soft {
-          0%, 100% { box-shadow: 0 0 0 0px rgba(16, 185, 129, 0.4); }
-          50% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
         }
         .register-bubble {
           position: absolute;
@@ -55,18 +47,16 @@ export default function RegisterSection() {
           animation: bubbleFall linear infinite;
           will-change: transform;
         }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
       `}</style>
 
       {/* Fondo de Imagen con Overlay Dinámico */}
       <div className="absolute inset-0 z-0">
-        <img src={fondoAgua} className="w-full h-full object-cover scale-105" alt="Fondo" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-900/40 via-white/20 to-emerald-900/30 backdrop-blur-[2px]" />
+        <img src={fondoAgua} className="w-full h-full object-cover scale-110" alt="Fondo" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-white/40" />
+        <div className="absolute inset-0 bg-cyan-900/10 backdrop-blur-[1px]" />
       </div>
 
-      {/* Sistema de Burbujas */}
+      {/* Sistema de Burbujas (Original) */}
       {bubbles.map((b, i) => (
         <div
           key={i}
@@ -85,69 +75,85 @@ export default function RegisterSection() {
       ))}
 
       <div className="relative mx-auto max-w-2xl z-10 w-full">
-        <div className="relative rounded-[3rem] bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] p-10 md:p-16 text-center overflow-hidden">
+        {/* Contenedor Principal Mejorado */}
+        <div className="relative rounded-[3.5rem] bg-white/70 backdrop-blur-2xl border border-white shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] p-8 md:p-20 text-center overflow-hidden transition-all duration-700">
           
-          {/* Adornos visuales */}
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-cyan-200/30 rounded-full blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-emerald-200/30 rounded-full blur-3xl" />
-          <Sparkles className="absolute top-8 right-10 text-cyan-400/60 animate-pulse" size={32} />
+          {/* Adornos visuales internos */}
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-cyan-200/40 rounded-full blur-[80px]" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-emerald-200/40 rounded-full blur-[80px]" />
 
           <div className="relative flex flex-col items-center">
-            <span className="inline-block px-4 py-1 rounded-full bg-cyan-100/50 text-cyan-700 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+            {/* Badge superior más estilizado */}
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-900 text-white text-[10px] font-bold uppercase tracking-[0.25em] mb-10 shadow-lg shadow-cyan-900/20">
+              <Sparkles size={14} className="text-cyan-400" />
               Soporte Gabo Fest
-            </span>
+            </div>
 
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-none">
-              Confirma <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-emerald-500">
-                Tu asistencia
+            <h2 className="text-5xl md:text-7xl font-black text-slate-950 tracking-tight leading-[0.9] mb-8">
+              Confirmar <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-teal-500 to-emerald-600">
+                Asistencia
               </span>
             </h2>
 
-            <p className="mt-6 text-slate-600 font-medium text-lg leading-relaxed">
-              No te quedes con la duda. Gabo está listo para ayudarte con lo que necesites.
+            <p className="text-slate-600 font-medium text-lg md:text-xl leading-relaxed max-w-md mx-auto">
+              Estamos a un mensaje de distancia para asegurar que tu experiencia sea perfecta.
             </p>
 
-            {/* Tarjeta de Contacto Llamativa */}
-            <div className="mt-12 w-full">
+            {/* Botón WhatsApp - Rediseño tipo "Glassmorphism" oscuro */}
+            <div className="mt-12 w-full group">
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="group relative flex items-center justify-between bg-gradient-to-r from-emerald-500 to-teal-600 p-1 md:p-2 rounded-3xl shadow-[0_20px_40px_-10px_rgba(16,185,129,0.3)] transition-all duration-500 hover:shadow-[0_30px_60px_-12px_rgba(16,185,129,0.4)] hover:-translate-y-1"
+                className="relative flex items-center justify-between bg-slate-950 p-3 md:p-4 rounded-[2.5rem] transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_30px_60px_-15px_rgba(16,185,129,0.4)] active:scale-95 overflow-hidden"
               >
-                <div className="flex items-center gap-4 ml-6">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-white rounded-full animate-ping opacity-20" />
-                    <div className="relative bg-white p-3 rounded-2xl text-emerald-600 shadow-sm">
-                      <MessageCircle size={28} />
-                    </div>
+                {/* Brillo al pasar el mouse */}
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                
+                <div className="flex items-center gap-5 ml-4 md:ml-6">
+                  <div className="relative flex items-center justify-center w-14 h-14 bg-emerald-500 rounded-2xl text-white shadow-inner transform group-hover:rotate-6 transition-transform">
+                    <MessageCircle size={30} fill="currentColor" />
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-4 w-4 bg-white/20"></span>
+                    </span>
                   </div>
                   <div className="text-left">
-                    <p className="text-white font-black text-xl leading-none">Hablar con Gabo</p>
-                    <p className="text-emerald-100 text-[10px] font-bold uppercase tracking-widest mt-1">WhatsApp Personal</p>
+                    <p className="text-white font-extrabold text-xl md:text-2xl leading-none">Chatear con Gabo</p>
+                    <p className="text-emerald-400 text-[10px] font-black uppercase tracking-widest mt-1.5">Respuesta inmediata</p>
                   </div>
                 </div>
 
-                <div className="mr-4 bg-white/20 p-4 rounded-2xl backdrop-blur-sm group-hover:bg-white/30 transition-colors">
-                  <ArrowRight size={24} className="text-white group-hover:translate-x-1 transition-transform" />
+                <div className="mr-2 md:mr-4 bg-white/10 p-5 rounded-[1.8rem] text-white transition-colors group-hover:bg-emerald-500 group-hover:text-white">
+                  <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
                 </div>
               </a>
             </div>
 
-            {/* Footer del cuadro */}
-            <div className="mt-12 pt-8 border-t border-slate-100 w-full flex flex-col items-center gap-4">
-              <div className="flex items-center gap-8">
-                <div className="text-center">
-                  <p className="text-[10px] font-black text-slate-800 uppercase">Fecha</p>
-                  <p className="text-xs text-slate-500 font-bold">07 Feb</p>
+            {/* Footer con info rápida (Fecha/Lugar) */}
+            <div className="mt-16 w-full flex items-center justify-center gap-4 md:gap-12 py-6 border-t border-slate-200/50">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-cyan-50 flex items-center justify-center text-cyan-600">
+                    <Calendar size={18} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Fecha</p>
+                    <p className="text-sm font-bold text-slate-800">07 Feb 2026</p>
+                  </div>
                 </div>
-                <div className="w-px h-8 bg-slate-100" />
-                <div className="text-center">
-                  <p className="text-[10px] font-black text-slate-800 uppercase">Lugar</p>
-                  <p className="text-xs text-slate-500 font-bold">Lima, PE</p>
+                
+                <div className="w-[1px] h-10 bg-slate-200" />
+
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                    <MapPin size={18} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Lugar</p>
+                    <p className="text-sm font-bold text-slate-800">Lima, Perú</p>
+                  </div>
                 </div>
-              </div>
             </div>
 
           </div>
