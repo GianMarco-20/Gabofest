@@ -1,25 +1,10 @@
 import { useMemo } from "react";
-import PrimaryButton from "../ui/PrimaryButton";
-import { eventConfig } from "../config/eventConfig";
-import { 
-  ClipboardCheck, 
-  Sparkles, 
-  UserPlus, 
-  Clock, 
-  BedDouble, 
-  QrCode, 
-  MessageCircle 
-} from "lucide-react";
+import { Sparkles, MessageCircle, ArrowRight } from "lucide-react";
 import fondoAgua from "../assets/register/fondoregister.png";
 
 export default function RegisterSection() {
-  const formSteps = [
-    { icon: <UserPlus size={18} />, text: "Nombre y Apellido" },
-    { icon: <Clock size={18} />, text: "Hora de llegada" },
-  ];
-
   const bubbles = useMemo(() => {
-    const n = 130; 
+    const n = 130;
     const rand01 = (i) => {
       const x = Math.sin(i * 437.123) * 10000;
       return x - Math.floor(x);
@@ -39,10 +24,12 @@ export default function RegisterSection() {
     });
   }, []);
 
-  const whatsappUrl = `https://wa.me/51969871263?text=${encodeURIComponent("¡Hola Gabo! Tengo una duda sobre la Gabo Fest 2026")}`;
+  const whatsappUrl = `https://wa.me/51969871263?text=${encodeURIComponent(
+    "¡Hola Gabo! Tengo una duda sobre la Gabo Fest 2026"
+  )}`;
 
   return (
-    <section id="registro" className="relative w-full py-16 md:py-24 px-4 flex items-center justify-center bg-white overflow-hidden">
+    <section id="registro" className="relative w-full py-20 md:py-32 px-4 flex items-center justify-center bg-white overflow-hidden">
       
       <style>{`
         @keyframes bubbleFall {
@@ -51,36 +38,35 @@ export default function RegisterSection() {
           90% { opacity: var(--op); }
           100% { transform: translate3d(0, 110vh, 0) scale(1.1); opacity: 0; }
         }
-        @keyframes titlePulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.03); }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
         }
-        @keyframes stepPop {
-          from { opacity: 0; transform: scale(0.8) translateY(10px); }
-          to { opacity: 1; transform: scale(1) translateY(0); }
+        @keyframes pulse-soft {
+          0%, 100% { box-shadow: 0 0 0 0px rgba(16, 185, 129, 0.4); }
+          50% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
         }
         .register-bubble {
           position: absolute;
           top: -50px;
-          z-index: 1; /* Detrás del contenido z-10 */
+          z-index: 1;
           pointer-events: none;
           border-radius: 50%;
           animation: bubbleFall linear infinite;
           will-change: transform;
         }
-        .animate-title-pulse {
-          animation: titlePulse 4s ease-in-out infinite;
-          display: inline-block;
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
         }
       `}</style>
 
-      {/* Fondo */}
+      {/* Fondo de Imagen con Overlay Dinámico */}
       <div className="absolute inset-0 z-0">
-        <img src={fondoAgua} className="w-full h-full object-cover" alt="Fondo" />
-        <div className="absolute inset-0 bg-gradient-to-b from-cyan-900/20 via-white/40 to-cyan-900/20" />
+        <img src={fondoAgua} className="w-full h-full object-cover scale-105" alt="Fondo" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-900/40 via-white/20 to-emerald-900/30 backdrop-blur-[2px]" />
       </div>
 
-      {/* Burbujas (Detrás del cuadro) */}
+      {/* Sistema de Burbujas */}
       {bubbles.map((b, i) => (
         <div
           key={i}
@@ -91,82 +77,79 @@ export default function RegisterSection() {
             height: `${b.size}px`,
             animationDuration: `${b.dur}s`,
             animationDelay: `${b.delay}s`,
-            background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7), rgba(180, 240, 255, 0.2))`,
-            boxShadow: "inset -1px -1px 4px rgba(255,255,255,0.3)",
+            background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(180, 240, 255, 0.2))`,
+            boxShadow: "inset -2px -2px 6px rgba(255,255,255,0.4), 0 4px 10px rgba(0,0,0,0.05)",
             "--op": b.op,
           }}
         />
       ))}
 
-      <div className="relative mx-auto max-w-4xl z-10 w-full">
-        {/* Cuadro principal */}
-        <div className="relative rounded-[2.5rem] bg-white/90 backdrop-blur-md border border-cyan-100 shadow-2xl p-8 md:p-12 text-center">
+      <div className="relative mx-auto max-w-2xl z-10 w-full">
+        <div className="relative rounded-[3rem] bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] p-10 md:p-16 text-center overflow-hidden">
           
-          <Sparkles className="absolute top-8 right-8 text-cyan-300 opacity-50" size={40} />
+          {/* Adornos visuales */}
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-cyan-200/30 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-emerald-200/30 rounded-full blur-3xl" />
+          <Sparkles className="absolute top-8 right-10 text-cyan-400/60 animate-pulse" size={32} />
 
-          <div className="flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-cyan-50 px-4 py-1.5 text-[10px] font-bold text-cyan-600 uppercase tracking-widest border border-cyan-100">
-              <ClipboardCheck size={14} />
-              Confirmación de Asistencia
-            </div>
+          <div className="relative flex flex-col items-center">
+            <span className="inline-block px-4 py-1 rounded-full bg-cyan-100/50 text-cyan-700 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+              Soporte Gabo Fest
+            </span>
 
-            {/* Animación en el título */}
-            <h2 className="mt-6 text-4xl md:text-5xl font-black text-slate-800 tracking-tight animate-title-pulse">
-              ¡ASEGURA TU <span className="text-cyan-500">LUGAR!</span>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-none">
+              ¿TIENES ALGUNA <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-emerald-500">
+                PREGUNTA?
+              </span>
             </h2>
-            
-            <p className="mt-4 max-w-lg text-slate-600 font-medium">
-              Antes del chapuzón, regístrate para tener todo listo cuando llegues.
+
+            <p className="mt-6 text-slate-600 font-medium text-lg leading-relaxed">
+              No te quedes con la duda. Gabo está listo para ayudarte con lo que necesites.
             </p>
 
-            {/* Animación en las tarjetas */}
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl text-left">
-              {formSteps.map((step, index) => (
-                <div 
-                  key={index} 
-                  style={{ 
-                    animation: `stepPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.2 + index * 0.1}s backwards` 
-                  }}
-                  className="flex items-center gap-3 bg-white border border-slate-100 p-4 rounded-2xl shadow-sm hover:shadow-md hover:border-cyan-200 transition-all group"
-                >
-                  <div className="bg-cyan-50 p-2 rounded-xl text-cyan-600 group-hover:scale-110 transition-transform">
-                    {step.icon}
-                  </div>
-                  <span className="text-xs font-bold text-slate-700 uppercase tracking-tight">
-                    {step.text}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-10 w-full max-w-sm space-y-6">
-              <a 
-                href={eventConfig.googleFormUrl} 
-                target="_blank" 
-                rel="noreferrer" 
-                className="block transform transition-all hover:scale-105 active:scale-95"
+            {/* Tarjeta de Contacto Llamativa */}
+            <div className="mt-12 w-full">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="group relative flex items-center justify-between bg-gradient-to-r from-emerald-500 to-teal-600 p-1 md:p-2 rounded-3xl shadow-[0_20px_40px_-10px_rgba(16,185,129,0.3)] transition-all duration-500 hover:shadow-[0_30px_60px_-12px_rgba(16,185,129,0.4)] hover:-translate-y-1"
               >
-                <PrimaryButton className="w-full py-5 text-lg font-black bg-cyan-500 hover:bg-cyan-600 text-white rounded-2xl shadow-xl shadow-cyan-200 border-b-4 border-cyan-700 uppercase tracking-wider">
-                  REGISTRARME AHORA
-                </PrimaryButton>
+                <div className="flex items-center gap-4 ml-6">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-white rounded-full animate-ping opacity-20" />
+                    <div className="relative bg-white p-3 rounded-2xl text-emerald-600 shadow-sm">
+                      <MessageCircle size={28} />
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <p className="text-white font-black text-xl leading-none">Hablar con Gabo</p>
+                    <p className="text-emerald-100 text-[10px] font-bold uppercase tracking-widest mt-1">WhatsApp Personal</p>
+                  </div>
+                </div>
+
+                <div className="mr-4 bg-white/20 p-4 rounded-2xl backdrop-blur-sm group-hover:bg-white/30 transition-colors">
+                  <ArrowRight size={24} className="text-white group-hover:translate-x-1 transition-transform" />
+                </div>
               </a>
-
-              <div className="pt-4 border-t border-slate-100">
-                <a 
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group inline-flex items-center gap-2 text-slate-500 hover:text-emerald-600 transition-colors"
-                >
-                  <MessageCircle size={18} className="text-emerald-500 group-hover:animate-bounce" />
-                  <span className="text-xs font-bold uppercase tracking-widest">¿Tienes dudas? Habla con Gabo</span>
-                </a>
-              </div>
-
-              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">
-                07 de Febrero • Lima, Perú
-              </p>
             </div>
+
+            {/* Footer del cuadro */}
+            <div className="mt-12 pt-8 border-t border-slate-100 w-full flex flex-col items-center gap-4">
+              <div className="flex items-center gap-8">
+                <div className="text-center">
+                  <p className="text-[10px] font-black text-slate-800 uppercase">Fecha</p>
+                  <p className="text-xs text-slate-500 font-bold">07 Feb</p>
+                </div>
+                <div className="w-px h-8 bg-slate-100" />
+                <div className="text-center">
+                  <p className="text-[10px] font-black text-slate-800 uppercase">Lugar</p>
+                  <p className="text-xs text-slate-500 font-bold">Lima, PE</p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
