@@ -98,9 +98,9 @@ export default function RegisterSection() {
             </span>
 
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-none">
-              ¿TIENES ALGUNA <br />
+              Confirma <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-emerald-500">
-                PREGUNTA?
+                Tu asistencia
               </span>
             </h2>
 
