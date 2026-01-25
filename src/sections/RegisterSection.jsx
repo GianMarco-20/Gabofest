@@ -25,7 +25,7 @@ export default function RegisterSection() {
   }, []);
 
   const whatsappUrl = `https://wa.me/51969871263?text=${encodeURIComponent(
-    "¡Hola Gabo! Tengo una duda sobre la Gabo Fest 2026"
+    "¡Hola Gabo! Confirmo mi asistencia en Gabo Fest 2026"
   )}`;
 
   return (
